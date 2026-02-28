@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Cleanio - a two-wheeler doorstep service app with services: Full Service (₹899 upto 200cc, ₹1199 above 200cc), Repair, and Cleaning (Colour Foam Washing ₹199, Normal Foam Washing ₹149). Includes an AI chatbot to diagnose repair issues. Bookings can be assigned to a mechanic, visible to both customer and admin.",
+  "architectural_notes": [
+    "Brand name: Cleanio - two-wheeler doorstep service app",
+    "AI chatbot integrated for repair issue diagnosis (electrical, brake, bike not starting, etc.)",
+    "Service pricing: Full Service ₹899 (upto 200cc), ₹1199 (above 200cc)",
+    "Cleaning service has two pricing tiers: Colour Foam Washing ₹199, Normal Foam Washing ₹149",
+    "Mechanic name field added to bookings, displayed to both customer and admin"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-a-landing-home-page-with-the-brand-name-cleanio-prominently-displayed-a-tagline-about-doorstep-two-wheeler-services-and-clear-navigation-to-the-three-service-options-full-service-repair-and-cleaning",
+      "title": "Build a landing/home page with the brand name 'Cleanio' prominently displayed, a tagline about doorstep two-wheeler services, and clear navigation to the three service options: Full Service, Repair, and Cleaning.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-full-service-booking-flow-the-user-selects-their-engine-capacity-upto-200cc-899-or-above-200cc-1199-the-price-must-be-dynamically-displayed-based-on-the-selection-the-form-collects-customer-name-phone-number-address-and-preferred-time-slot-before-submitting-the-booking",
+      "title": "Implement a Full Service booking flow. The user selects their engine capacity: 'Upto 200cc' (₹899) or 'Above 200cc' (₹1199). The price must be dynamically displayed based on the selection. The form collects customer name, phone number, address, and preferred time slot before submitting the booking.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-repair-booking-flow-that-launches-an-ai-style-conversational-chatbot-ui-the-bot-must-interactively-ask-the-customer-about-their-repair-issue-through-a-series-of-guided-questions-e-g-what-issue-are-you-facing-with-quick-reply-options-electrical-issue-brake-problem-bike-not-starting-engine-noise-other-based-on-selection-it-asks-follow-up-questions-to-gather-details-at-the-end-the-collected-issue-summary-is-pre-filled-into-the-booking-form-name-phone-address-time-slot-for-submission",
+      "title": "Implement a Repair booking flow that launches an AI-style conversational chatbot UI. The bot must interactively ask the customer about their repair issue through a series of guided questions (e.g., 'What issue are you facing?' with quick-reply options: Electrical Issue, Brake Problem, Bike Not Starting, Engine Noise, Other). Based on selection it asks follow-up questions to gather details. At the end the collected issue summary is pre-filled into the booking form (name, phone, address, time slot) for submission.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-cleaning-booking-flow-display-the-available-cleaning-service-description-collect-customer-name-phone-number-address-vehicle-type-and-preferred-time-slot-then-submit-to-the-backend",
+      "title": "Implement a Cleaning booking flow. Display the available cleaning service description. Collect customer name, phone number, address, vehicle type, and preferred time slot, then submit to the backend.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-simple-admin-bookings-page-that-lists-all-submitted-bookings-with-their-details-and-status-allow-status-updates-pending-confirmed-completed-from-this-view",
+      "title": "Create a simple admin/bookings page that lists all submitted bookings with their details and status. Allow status updates (Pending → Confirmed → Completed) from this view.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-bold-energetic-visual-theme-consistent-with-the-cleanio-brand-use-a-high-contrast-color-palette-of-deep-charcoal-and-electric-orange-as-the-primary-accent-clean-sans-serif-typography-card-based-layouts-and-smooth-micro-interactions-maintain-this-design-consistently-across-all-pages-including-the-chatbot-ui",
+      "title": "Apply a bold, energetic visual theme consistent with the 'Cleanio' brand: use a high-contrast color palette of deep charcoal and electric orange as the primary accent, clean sans-serif typography, card-based layouts, and smooth micro-interactions. Maintain this design consistently across all pages including the chatbot UI.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-existing-logo-in-the-header-navbar-with-the-newly-uploaded-scooter-with-pin-logo-image-cleanio-logo-png-displayed-inline-beside-the-cleanio-wordmark-the-logo-must-be-sized-proportionally-to-fit-the-header-height-and-must-appear-on-all-pages-via-the-layout-component",
+      "title": "Replace the existing logo in the header/navbar with the newly uploaded scooter-with-pin logo image (cleanio-logo.png), displayed inline beside the 'Cleanio' wordmark. The logo must be sized proportionally to fit the header height and must appear on all pages via the Layout component.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-cleaning-booking-flow-to-offer-two-washing-sub-options-colour-foam-washing-at-199-and-normal-foam-washing-at-149-the-user-must-select-one-of-these-options-before-submitting-the-selected-option-and-its-price-must-be-displayed-dynamically-and-stored-with-the-booking-update-the-backend-booking-type-to-capture-the-cleaning-sub-option-field",
+      "title": "Update the Cleaning booking flow to offer two washing sub-options: 'Colour Foam Washing' at ₹199 and 'Normal Foam Washing' at ₹149. The user must select one of these options before submitting; the selected option and its price must be displayed dynamically and stored with the booking. Update the backend Booking type to capture the cleaning sub-option field.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-mechanic-name-field-to-the-booking-data-model-and-admin-interface-on-the-admin-bookings-page-allow-an-admin-to-assign-or-edit-a-mechanic-name-for-any-booking-the-assigned-mechanic-name-must-be-stored-in-the-backend-on-the-customer-facing-booking-confirmation-page-display-the-assigned-mechanic-name-if-one-has-been-set",
+      "title": "Add a mechanic name field to the booking data model and admin interface. On the admin bookings page, allow an admin to assign or edit a mechanic name for any booking. The assigned mechanic name must be stored in the backend. On the customer-facing booking confirmation page, display the assigned mechanic name if one has been set.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-layout-component-header-place-the-user-uploaded-bike-logo-image-to-the-left-of-the-cleanio-wordmark-the-logo-image-must-be-rendered-as-a-static-asset-from-frontend-public-assets-generated-cleanio-logo-png-sized-proportionally-to-fit-the-header-height-and-displayed-inline-beside-the-brand-name-on-all-pages",
+      "title": "In the Layout component header, place the user-uploaded bike logo image to the left of the 'Cleanio' wordmark. The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Full Service option: ₹899 for upto 200cc, ₹1199 for above 200cc",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Repair service option with AI chatbot to diagnose issues (electrical, brake, bike not starting, etc.)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Cleaning service option",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "AI bot for repair issue diagnosis - asks customer about issues like electrical, brake, bike not starting, etc.",
+      "reqIds": [
+        "AR-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Doorstep service booking flow for two-wheelers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Create a Motoko backend actor that stores service bookings. Each booking must capture: customer name, phone number, address, vehicle type (scooter/motorcycle), engine capacity (upto 200cc or above 200cc), selected service (Full Service, Repair, Cleaning), repair issue details (if Repair selected), and booking status (Pending, Confirmed, Completed). Expose CRUD endpoints: createBooking, getBookings, updateBookingStatus.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Update logo placement: show new logo image beside the 'Cleanio' brand wordmark",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Cleaning service: add two sub-options — Colour Foam Washing (₹199) and Normal Foam Washing (₹149)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add mechanic name assignment to bookings, visible to both customer and admin",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Cleanio",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

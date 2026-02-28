@@ -1,0 +1,40 @@
+{
+  "kind": "build_request",
+  "title": "Display bike logo image to the left of the Cleanio wordmark in the header",
+  "projectName": "Cleanio",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-11",
+      "text": "In the Layout component header, place the user-uploaded bike logo image to the left of the 'Cleanio' wordmark. The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "can you please upload bike logo given above in image to left side of the brand Cleanio"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The bike logo image appears immediately to the left of the 'Cleanio' text in the sticky header on all pages.",
+        "The logo is sourced from frontend/public/assets/generated/cleanio-logo.png.",
+        "The logo height is proportional and fits within the header bar without overflow or distortion.",
+        "The logo and wordmark are visually aligned (vertically centered) in the header."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify any immutable frontend paths (useInternetIdentity, useActor, main.tsx, ui components).",
+    "Use the existing cleanio-logo.png asset already present in the project; do not replace or regenerate it unless an edit is explicitly requested."
+  ],
+  "nonGoals": [
+    "Changing any other aspect of the header or navigation layout.",
+    "Modifying backend data models or booking logic.",
+    "Restyling the overall brand theme or color palette."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

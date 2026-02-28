@@ -1,0 +1,31 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-28T04:03:38.447Z",
+  "summary": "The diff shows Layout.tsx was modified to add a bike logo image to the left of the 'Cleanio' wordmark in the header. However, the image source used is '/assets/file_000000006ec461f5905d0bdb5d01b34a(1)(1).png' rather than the required '/assets/generated/cleanio-logo.png' path specified in REQ-11.",
+  "missing_requirements": [
+    {
+      "id": "REQ-11",
+      "requirement": "The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png",
+      "reason": "The diff shows the image src is set to '/assets/file_000000006ec461f5905d0bdb5d01b34a(1)(1).png' instead of the required '/assets/generated/cleanio-logo.png' path specified by REQ-11.",
+      "evidence": [
+        "frontend/src/components/Layout.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "The bike logo image is also added to the footer alongside the Cleanio brand name",
+      "reason": "REQ-11 only specifies placing the logo in the sticky header. Adding it to the footer was not requested.",
+      "evidence": [
+        "frontend/src/components/Layout.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.9,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/Layout.tsx",
+    "project_state.json"
+  ]
+}
