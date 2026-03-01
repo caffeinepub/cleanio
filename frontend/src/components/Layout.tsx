@@ -28,8 +28,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               alt="Cleanio Bike Icon"
               className="h-10 w-auto object-contain"
             />
-            <span className="text-xl font-bold text-foreground tracking-tight font-poppins">
-              Cleanio
+            <span className="text-xl font-bold tracking-tight font-poppins">
+              <span className="text-brand-orange">Clean</span>
+              <span className="text-white">io</span>
             </span>
           </Link>
 
@@ -96,7 +97,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 alt="Cleanio Bike Icon"
                 className="h-7 w-auto object-contain"
               />
-              <span className="text-foreground font-bold font-poppins">Cleanio</span>
+              <span className="font-bold font-poppins">
+                <span className="text-brand-orange">Clean</span>
+                <span className="text-white">io</span>
+              </span>
               <span className="text-muted-foreground text-sm ml-1">
                 Doorstep Two-Wheeler Services
               </span>

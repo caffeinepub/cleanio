@@ -1,10 +1,9 @@
 # Specification
 
 ## Summary
-**Goal:** Display the bike logo image to the left of the "Cleanio" wordmark in the sticky header across all pages.
+**Goal:** Update the "Cleanio" wordmark in the header so that "Clean" appears in orange and "io" appears in white.
 
 **Planned changes:**
-- In the Layout component header, render the bike logo image (sourced from `frontend/public/assets/generated/cleanio-logo.png`) immediately to the left of the "Cleanio" brand name text.
-- Size the logo proportionally to fit within the header height without overflow or distortion, and vertically center it inline with the wordmark.
+- Split the "Cleanio" text in the Layout component header into two `<span>` elements: one for "Clean" styled in orange and one for "io" styled in white
 
-**User-visible outcome:** The header on every page shows the bike logo image displayed to the left of the "Cleanio" text, forming a combined logo-and-wordmark branding unit.
+**User-visible outcome:** The header wordmark displays "Clean" in orange and "io" in white across all pages, while the bike logo remains visible beside the text.

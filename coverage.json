@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-28T04:03:38.449Z",
+  "generatedAt": "2026-03-01T11:49:22.334Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,8 +11,8 @@
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-11",
-        "summary": "In the Layout component header, place the user-uploaded bike logo image to the left of the 'Cleanio' wordmark. The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+        "id": "REQ-1",
+        "summary": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/Layout.tsx"

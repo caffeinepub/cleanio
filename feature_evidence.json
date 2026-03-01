@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-layout-component-header-place-the-user-uploaded-bike-logo-image-to-the-left-of-the-cleanio-wordmark-the-logo-image-must-be-rendered-as-a-static-asset-from-frontend-public-assets-generated-cleanio-logo-png-sized-proportionally-to-fit-the-header-height-and-displayed-inline-beside-the-brand-name-on-all-pages",
-      "featureTitle": "In the Layout component header, place the user-uploaded bike logo image to the left of the 'Cleanio' wordmark. The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+      "featureId": "feature-in-the-layout-component-header-update-the-cleanio-wordmark-text-so-that-clean-is-rendered-in-orange-and-io-is-rendered-in-white-split-the-text-into-two-separate-spans-one-for-clean-with-the-orange-brand-color-and-one-for-io-with-white-color",
+      "featureTitle": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
       "files": [
         "frontend/src/components/Layout.tsx"
       ],
@@ -15,7 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-1"
       ],
       "confidence": "high"
     }

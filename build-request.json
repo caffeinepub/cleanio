@@ -1,37 +1,37 @@
 {
   "kind": "build_request",
-  "title": "Display bike logo image to the left of the Cleanio wordmark in the header",
+  "title": "Style 'Clean' in orange and 'io' in white in the Cleanio header text",
   "projectName": "Cleanio",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-11",
-      "text": "In the Layout component header, place the user-uploaded bike logo image to the left of the 'Cleanio' wordmark. The logo image must be rendered as a static asset from frontend/public/assets/generated/cleanio-logo.png, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+      "id": "REQ-1",
+      "text": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-recent"
         ],
         "quotes": [
-          "can you please upload bike logo given above in image to left side of the brand Cleanio"
+          "make the 'clean' in orange colour and 'io' in white for the Cleanio"
         ]
       },
       "acceptanceCriteria": [
-        "The bike logo image appears immediately to the left of the 'Cleanio' text in the sticky header on all pages.",
-        "The logo is sourced from frontend/public/assets/generated/cleanio-logo.png.",
-        "The logo height is proportional and fits within the header bar without overflow or distortion.",
-        "The logo and wordmark are visually aligned (vertically centered) in the header."
+        "The header displays 'Cleanio' with 'Clean' visually in orange",
+        "The 'io' portion of 'Cleanio' is visually white",
+        "The bike logo remains displayed beside the Cleanio wordmark",
+        "The styling is consistent across all pages"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any immutable frontend paths (useInternetIdentity, useActor, main.tsx, ui components).",
-    "Use the existing cleanio-logo.png asset already present in the project; do not replace or regenerate it unless an edit is explicitly requested."
+    "Do not modify any files under frontend/src/hooks/ or frontend/src/components/ui/",
+    "The bike logo must remain visible beside the Cleanio name in the header"
   ],
   "nonGoals": [
-    "Changing any other aspect of the header or navigation layout.",
-    "Modifying backend data models or booking logic.",
-    "Restyling the overall brand theme or color palette."
+    "Changing any other header or navigation styles",
+    "Modifying backend logic",
+    "Changing the font or size of the Cleanio wordmark"
   ],
   "imageRequirements": {
     "required": [],

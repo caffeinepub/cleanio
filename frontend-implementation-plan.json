@@ -1,22 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Display bike logo image to the left of the Cleanio wordmark in the header",
+  "title": "Style 'Clean' in orange and 'io' in white in the Cleanio header text",
   "requirements": [
     {
-      "id": "REQ-11",
-      "summary": "Place the bike logo image to the left of the 'Cleanio' wordmark in the Layout component header, sourced from the generated asset, sized proportionally to fit the header height, and displayed inline beside the brand name on all pages.",
+      "id": "REQ-1",
+      "summary": "Update the Cleanio wordmark in the Layout component header to display 'Clean' in orange and 'io' in white using separate styled spans",
       "acceptanceCriteria": [
-        "The bike logo image appears immediately to the left of the 'Cleanio' text in the sticky header on all pages.",
-        "The logo is sourced from frontend/public/assets/generated/cleanio-logo.png.",
-        "The logo height is proportional and fits within the header bar without overflow or distortion.",
-        "The logo and wordmark are visually aligned (vertically centered) in the header."
+        "The header displays 'Cleanio' with 'Clean' visually in orange",
+        "The 'io' portion of 'Cleanio' is visually white",
+        "The bike logo remains displayed beside the Cleanio wordmark",
+        "The styling is consistent across all pages"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add an img element sourcing frontend/public/assets/generated/cleanio-logo.dim_400x120.png to the left of the 'Cleanio' wordmark in the header. Use Tailwind classes to size the logo proportionally (e.g., h-8 or h-10) and align it vertically with the brand text using flexbox (flex items-center gap-2). Ensure the logo and wordmark are wrapped in a container that maintains their inline relationship and vertical centering within the sticky header bar."
+          "description": "Split the 'Cleanio' text into two separate span elements: one for 'Clean' with orange color (using text-orange-500 or the brand orange color class) and one for 'io' with white color (using text-white). Ensure the bike logo remains visible beside the wordmark and the layout remains consistent with the existing header structure."
         }
       ]
     }
