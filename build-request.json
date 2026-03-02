@@ -1,37 +1,39 @@
 {
   "kind": "build_request",
-  "title": "Add accessible admin login entry point",
+  "title": "Make admin page clearly accessible from the UI",
   "projectName": "Cleanio",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
+      "text": "Add a clearly visible but discreet admin access link in the site footer (e.g., labeled 'Admin') in the Layout.tsx component that navigates to the /admin route, so administrators can find and access the admin login page without needing to know the direct URL.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
         ],
         "quotes": [
-          "now i can see only customer facing webpage"
+          "unsure about admin page as i cannot find it on version 8"
         ]
       },
       "acceptanceCriteria": [
-        "A link or button to /admin is accessible from the main page on the production site",
-        "Navigating to /admin shows the AdminLoginForm (password gate) via ProtectedAdminRoute",
-        "The link is unobtrusive (e.g., small text in footer) so it does not distract customers",
-        "Unauthenticated users who visit /admin see the login form, not the admin dashboard"
+        "A link labeled 'Admin' (or equivalent) is visible in the site footer on all pages.",
+        "Clicking the admin link navigates the user to the /admin route.",
+        "The ProtectedAdminRoute renders the AdminLoginForm when the user is not authenticated.",
+        "The admin link is visually unobtrusive (small, muted styling) so it does not distract regular customers.",
+        "The link is present on both desktop and mobile layouts."
       ]
     }
   ],
   "constraints": [
-    "Do not expose admin functionality to unauthenticated users — ProtectedAdminRoute must remain in place",
-    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui"
+    "Do not modify any files under frontend/src/hooks/ (immutable paths).",
+    "Do not change the existing admin authentication logic in useAdminAuth.tsx or ProtectedAdminRoute.tsx.",
+    "Admin route (/admin) must remain password-protected."
   ],
   "nonGoals": [
-    "Changing the admin authentication mechanism",
-    "Modifying the admin dashboard or booking management features",
-    "Adding Internet Identity or any other auth method"
+    "Changing the admin password or authentication mechanism.",
+    "Redesigning the admin bookings page layout.",
+    "Adding a prominent top-navigation admin link that is highly visible to all users."
   ],
   "imageRequirements": {
     "required": [],

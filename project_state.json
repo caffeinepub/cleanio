@@ -4,20 +4,20 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "Admin login page not accessible from production; only customer-facing booking page is visible"
+    "Admin page is not clearly accessible/findable in the current build"
   ],
   "isFixRequest": true,
-  "existing_features": [
+  "existing_features": [],
+  "new_feature_requests": [
     {
-      "id": "feature-add-a-visible-but-discreet-navigation-entry-point-that-allows-access-to-the-admin-login-page-e-g-a-small-admin-link-in-the-footer-or-header-so-that-admins-can-navigate-to-admin-from-the-production-site-without-it-being-prominently-featured-for-customers",
-      "title": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
+      "id": "AR-1",
+      "summary": "Add a clearly visible but discreet admin access link in the site footer (e.g., labeled 'Admin') in the Layout.tsx component that navigates to the /admin route, so administrators can find and access the admin login page without needing to know the direct URL.",
       "reqIds": [
         "REQ-1"
       ],
-      "version": 1
+      "status": "pending"
     }
   ],
-  "new_feature_requests": [],
   "projectName": "Cleanio",
   "clarification_mode": "instant",
   "clarification_rounds": 0

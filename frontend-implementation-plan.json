@@ -1,22 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add accessible admin login entry point",
+  "title": "Make admin page clearly accessible from the UI",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a discreet navigation link to /admin in the footer so admins can access the login page from the production site",
+      "summary": "Add a discreet admin access link in the site footer that navigates to /admin",
       "acceptanceCriteria": [
-        "A link or button to /admin is accessible from the main page on the production site",
-        "Navigating to /admin shows the AdminLoginForm (password gate) via ProtectedAdminRoute",
-        "The link is unobtrusive (e.g., small text in footer) so it does not distract customers",
-        "Unauthenticated users who visit /admin see the login form, not the admin dashboard"
+        "A link labeled 'Admin' (or equivalent) is visible in the site footer on all pages.",
+        "Clicking the admin link navigates the user to the /admin route.",
+        "The ProtectedAdminRoute renders the AdminLoginForm when the user is not authenticated.",
+        "The admin link is visually unobtrusive (small, muted styling) so it does not distract regular customers.",
+        "The link is present on both desktop and mobile layouts."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add a small, styled 'Admin' link in the footer component that navigates to /admin. Style it to be subtle (smaller text, muted color) so it blends with the footer without drawing customer attention. The link should use React Router's Link component for client-side navigation."
+          "description": "Add an admin link to the footer section with discreet styling (small text, muted color) that navigates to /admin route using React Router Link component. Position the link in the footer alongside existing Cleanio branding text, ensuring it remains unobtrusive and does not interfere with the main customer experience. The link must be visible on both desktop and mobile layouts."
         }
       ]
     }
