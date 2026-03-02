@@ -1,37 +1,37 @@
 {
   "kind": "build_request",
-  "title": "Style 'Clean' in orange and 'io' in white in the Cleanio header text",
+  "title": "Add accessible admin login entry point",
   "projectName": "Cleanio",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
+      "text": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-recent"
+          "msg-latest"
         ],
         "quotes": [
-          "make the 'clean' in orange colour and 'io' in white for the Cleanio"
+          "now i can see only customer facing webpage"
         ]
       },
       "acceptanceCriteria": [
-        "The header displays 'Cleanio' with 'Clean' visually in orange",
-        "The 'io' portion of 'Cleanio' is visually white",
-        "The bike logo remains displayed beside the Cleanio wordmark",
-        "The styling is consistent across all pages"
+        "A link or button to /admin is accessible from the main page on the production site",
+        "Navigating to /admin shows the AdminLoginForm (password gate) via ProtectedAdminRoute",
+        "The link is unobtrusive (e.g., small text in footer) so it does not distract customers",
+        "Unauthenticated users who visit /admin see the login form, not the admin dashboard"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/hooks/ or frontend/src/components/ui/",
-    "The bike logo must remain visible beside the Cleanio name in the header"
+    "Do not expose admin functionality to unauthenticated users — ProtectedAdminRoute must remain in place",
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui"
   ],
   "nonGoals": [
-    "Changing any other header or navigation styles",
-    "Modifying backend logic",
-    "Changing the font or size of the Cleanio wordmark"
+    "Changing the admin authentication mechanism",
+    "Modifying the admin dashboard or booking management features",
+    "Adding Internet Identity or any other auth method"
   ],
   "imageRequirements": {
     "required": [],

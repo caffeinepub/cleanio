@@ -1,9 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Update the "Cleanio" wordmark in the header so that "Clean" appears in orange and "io" appears in white.
+**Goal:** Add a discreet admin login entry point on the customer-facing site so admins can navigate to the admin panel without it being prominently visible to customers.
 
 **Planned changes:**
-- Split the "Cleanio" text in the Layout component header into two `<span>` elements: one for "Clean" styled in orange and one for "io" styled in white
+- Add a small, unobtrusive "Admin" link in the footer (or header) that navigates to `/admin`
+- Ensure unauthenticated users visiting `/admin` are shown the admin login form via the existing `ProtectedAdminRoute`
 
-**User-visible outcome:** The header wordmark displays "Clean" in orange and "io" in white across all pages, while the bike logo remains visible beside the text.
+**User-visible outcome:** Admins can access the admin login page from the production site via a subtle footer link, while customers are unlikely to notice it. Unauthenticated visitors who follow the link see the password gate, not the admin dashboard.

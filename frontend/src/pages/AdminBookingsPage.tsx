@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Loader2, RefreshCw, ClipboardList, UserCheck } from 'lucide-react';
+import { Loader2, RefreshCw, ClipboardList, UserCheck, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetBookings, useUpdateBookingStatus, useAssignMechanic } from '../hooks/useQueries';
 import { type Booking, Status } from '../backend';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 
 const SERVICE_LABELS: Record<string, string> = {
   fullService: 'Full Service',
@@ -176,6 +177,7 @@ function BookingCard({ booking }: { booking: Booking }) {
 
 export default function AdminBookingsPage() {
   const { data: bookings, isLoading, refetch, isFetching } = useGetBookings();
+  const { logout } = useAdminAuth();
   const [filter, setFilter] = useState<string>('all');
 
   const filtered = bookings?.filter((b) => filter === 'all' || b.status === filter) ?? [];
@@ -200,16 +202,27 @@ export default function AdminBookingsPage() {
             <p className="text-muted-foreground text-sm">{counts.all} total bookings</p>
           </div>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange transition-all"
-        >
-          <RefreshCw className={`w-4 h-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange transition-all"
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={logout}
+            className="border-border text-muted-foreground hover:text-foreground hover:bg-charcoal-light hover:border-red-500/50 transition-all"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       {/* Filter Tabs */}
@@ -257,7 +270,7 @@ export default function AdminBookingsPage() {
           </div>
           <h3 className="font-semibold text-foreground mb-2">No bookings found</h3>
           <p className="text-muted-foreground text-sm">
-            {filter === 'all' ? 'No bookings have been made yet.' : `No ${filter} bookings.`}
+            {filter === 'all' ? 'No bookings have been made yet.' : `No ${filter} bookings at the moment.`}
           </p>
         </div>
       ) : (

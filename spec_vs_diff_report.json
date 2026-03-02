@@ -1,11 +1,11 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-03-01T11:49:22.332Z",
-  "summary": "The diff implements REQ-1 fully. The Layout component has been updated to split 'Cleanio' into two spans: 'Clean' with 'text-brand-orange' and 'io' with 'text-white'. The bike logo image remains beside the wordmark. The same two-tone styling is also applied in the footer. No files under frontend/src/hooks/ or frontend/src/components/ui/ were modified.",
+  "generatedAt": "2026-03-02T04:01:17.502Z",
+  "summary": "The diff implements REQ-1 by adding a subtle 'Admin' link in the footer of the Layout component, pointing to /admin. The existing ProtectedAdminRoute remains in place, and the link is described as 'muted text' making it unobtrusive. All acceptance criteria appear to be met.",
   "missing_requirements": [],
   "hallucinated_features": [],
-  "confidence": 0.97,
+  "confidence": 0.92,
   "changed_files": [
     "frontend-file-summaries.txt",
     "frontend/src/components/Layout.tsx",

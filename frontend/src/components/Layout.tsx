@@ -11,7 +11,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { label: 'Full Service', path: '/full-service' },
     { label: 'Repair', path: '/repair' },
     { label: 'Cleaning', path: '/cleaning' },
-    { label: 'Admin', path: '/admin/bookings' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -105,20 +104,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Doorstep Two-Wheeler Services
               </span>
             </div>
-            <p className="text-muted-foreground text-sm text-center">
-              © {new Date().getFullYear()} Cleanio. Built with{' '}
-              <span className="text-brand-orange">♥</span> using{' '}
-              <a
-                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-                  typeof window !== 'undefined' ? window.location.hostname : 'cleanio-app'
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-orange hover:underline font-medium"
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-muted-foreground text-sm text-center">
+                © {new Date().getFullYear()} Cleanio. Built with{' '}
+                <span className="text-brand-orange">♥</span> using{' '}
+                <a
+                  href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
+                    typeof window !== 'undefined' ? window.location.hostname : 'cleanio-app'
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange hover:underline font-medium"
+                >
+                  caffeine.ai
+                </a>
+              </p>
+              <Link
+                to="/admin"
+                className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors duration-200"
               >
-                caffeine.ai
-              </a>
-            </p>
+                Admin
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

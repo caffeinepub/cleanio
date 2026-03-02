@@ -1,22 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Style 'Clean' in orange and 'io' in white in the Cleanio header text",
+  "title": "Add accessible admin login entry point",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Update the Cleanio wordmark in the Layout component header to display 'Clean' in orange and 'io' in white using separate styled spans",
+      "summary": "Add a discreet navigation link to /admin in the footer so admins can access the login page from the production site",
       "acceptanceCriteria": [
-        "The header displays 'Cleanio' with 'Clean' visually in orange",
-        "The 'io' portion of 'Cleanio' is visually white",
-        "The bike logo remains displayed beside the Cleanio wordmark",
-        "The styling is consistent across all pages"
+        "A link or button to /admin is accessible from the main page on the production site",
+        "Navigating to /admin shows the AdminLoginForm (password gate) via ProtectedAdminRoute",
+        "The link is unobtrusive (e.g., small text in footer) so it does not distract customers",
+        "Unauthenticated users who visit /admin see the login form, not the admin dashboard"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Split the 'Cleanio' text into two separate span elements: one for 'Clean' with orange color (using text-orange-500 or the brand orange color class) and one for 'io' with white color (using text-white). Ensure the bike logo remains visible beside the wordmark and the layout remains consistent with the existing header structure."
+          "description": "Add a small, styled 'Admin' link in the footer component that navigates to /admin. Style it to be subtle (smaller text, muted color) so it blends with the footer without drawing customer attention. The link should use React Router's Link component for client-side navigation."
         }
       ]
     }

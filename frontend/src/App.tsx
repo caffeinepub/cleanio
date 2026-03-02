@@ -12,6 +12,8 @@ import RepairPage from './pages/RepairPage';
 import CleaningPage from './pages/CleaningPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
 import AdminBookingsPage from './pages/AdminBookingsPage';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import { AdminAuthProvider } from './hooks/useAdminAuth';
 
 // Root route with Layout
 const rootRoute = createRootRoute({
@@ -62,7 +64,21 @@ const confirmationRoute = createRoute({
 const adminBookingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin/bookings',
-  component: AdminBookingsPage,
+  component: () => (
+    <ProtectedAdminRoute>
+      <AdminBookingsPage />
+    </ProtectedAdminRoute>
+  ),
+});
+
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: () => (
+    <ProtectedAdminRoute>
+      <AdminBookingsPage />
+    </ProtectedAdminRoute>
+  ),
 });
 
 // Route tree
@@ -73,6 +89,7 @@ const routeTree = rootRoute.addChildren([
   cleaningRoute,
   confirmationRoute,
   adminBookingsRoute,
+  adminRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -84,5 +101,9 @@ declare module '@tanstack/react-router' {
 }
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AdminAuthProvider>
+      <RouterProvider router={router} />
+    </AdminAuthProvider>
+  );
 }

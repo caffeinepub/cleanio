@@ -1,35 +1,23 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project named Cleanio — a bike-related cleaning service app. Working on branding with a bike logo beside the Cleanio name and styled text (\"Clean\" in orange, \"io\" in white).",
+  "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Admin login page not accessible from production; only customer-facing booking page is visible"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-in-the-layout-component-header-update-the-cleanio-wordmark-text-so-that-clean-is-rendered-in-orange-and-io-is-rendered-in-white-split-the-text-into-two-separate-spans-one-for-clean-with-the-orange-brand-color-and-one-for-io-with-white-color",
-      "title": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
+      "id": "feature-add-a-visible-but-discreet-navigation-entry-point-that-allows-access-to-the-admin-login-page-e-g-a-small-admin-link-in-the-footer-or-header-so-that-admins-can-navigate-to-admin-from-the-production-site-without-it-being-prominently-featured-for-customers",
+      "title": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Display bike logo beside the Cleanio name in the header/branding",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Style 'Clean' in orange and 'io' in white in the Cleanio logo text",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "gameProjectType": "none",
+  "new_feature_requests": [],
   "projectName": "Cleanio",
   "clarification_mode": "instant",
   "clarification_rounds": 0

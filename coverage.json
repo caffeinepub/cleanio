@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-03-01T11:49:22.334Z",
+  "generatedAt": "2026-03-02T04:01:17.505Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,7 +12,7 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
+        "summary": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/Layout.tsx"

@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-layout-component-header-update-the-cleanio-wordmark-text-so-that-clean-is-rendered-in-orange-and-io-is-rendered-in-white-split-the-text-into-two-separate-spans-one-for-clean-with-the-orange-brand-color-and-one-for-io-with-white-color",
-      "featureTitle": "In the Layout component header, update the 'Cleanio' wordmark text so that 'Clean' is rendered in orange and 'io' is rendered in white. Split the text into two separate spans: one for 'Clean' with the orange brand color and one for 'io' with white color.",
+      "featureId": "feature-add-a-visible-but-discreet-navigation-entry-point-that-allows-access-to-the-admin-login-page-e-g-a-small-admin-link-in-the-footer-or-header-so-that-admins-can-navigate-to-admin-from-the-production-site-without-it-being-prominently-featured-for-customers",
+      "featureTitle": "Add a visible but discreet navigation entry point that allows access to the admin login page (e.g., a small 'Admin' link in the footer or header) so that admins can navigate to /admin from the production site without it being prominently featured for customers.",
       "files": [
         "frontend/src/components/Layout.tsx"
       ],
