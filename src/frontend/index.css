@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* Cleanio Brand: Deep Charcoal + Electric Orange */
+    --background: 0.14 0.005 260;
+    --foreground: 0.96 0.005 260;
+
+    --card: 0.18 0.008 260;
+    --card-foreground: 0.96 0.005 260;
+
+    --popover: 0.18 0.008 260;
+    --popover-foreground: 0.96 0.005 260;
+
+    /* Electric Orange primary */
+    --primary: 0.68 0.19 42;
+    --primary-foreground: 0.1 0.005 260;
+
+    --secondary: 0.22 0.01 260;
+    --secondary-foreground: 0.96 0.005 260;
+
+    --muted: 0.22 0.01 260;
+    --muted-foreground: 0.6 0.01 260;
+
+    --accent: 0.68 0.19 42;
+    --accent-foreground: 0.1 0.005 260;
+
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 0.28 0.01 260;
+    --input: 0.28 0.01 260;
+    --ring: 0.68 0.19 42;
+
+    --chart-1: 0.68 0.19 42;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+
+    --sidebar: 0.16 0.007 260;
+    --sidebar-foreground: 0.96 0.005 260;
+    --sidebar-primary: 0.68 0.19 42;
+    --sidebar-primary-foreground: 0.1 0.005 260;
+    --sidebar-accent: 0.22 0.01 260;
+    --sidebar-accent-foreground: 0.96 0.005 260;
+    --sidebar-border: 0.28 0.01 260;
+    --sidebar-ring: 0.68 0.19 42;
+
+    /* Brand specific */
+    --orange: 0.68 0.19 42;
+    --orange-light: 0.75 0.17 42;
+    --orange-dark: 0.58 0.2 42;
+    --charcoal: 0.14 0.005 260;
+    --charcoal-light: 0.22 0.01 260;
+    --charcoal-mid: 0.28 0.01 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-orange text-charcoal font-bold px-6 py-3 rounded-xl hover:bg-brand-orange-light transition-all duration-200 shadow-lg hover:shadow-orange-glow active:scale-95;
+  }
+
+  .card-service {
+    @apply bg-card border border-border rounded-2xl p-6 hover:border-brand-orange transition-all duration-300 hover:shadow-orange-glow cursor-pointer;
+  }
+
+  .chat-bubble-bot {
+    @apply bg-charcoal-light border border-border rounded-2xl rounded-tl-sm px-4 py-3 text-foreground max-w-xs;
+  }
+
+  .chat-bubble-user {
+    @apply bg-brand-orange text-charcoal font-medium rounded-2xl rounded-tr-sm px-4 py-3 max-w-xs;
+  }
+
+  .quick-reply-btn {
+    @apply border border-brand-orange text-brand-orange rounded-full px-4 py-2 text-sm font-medium hover:bg-brand-orange hover:text-charcoal transition-all duration-200 cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .shadow-orange-glow {
+    box-shadow: 0 0 20px oklch(0.68 0.19 42 / 0.3);
+  }
+
+  .text-gradient-orange {
+    background: linear-gradient(135deg, oklch(0.75 0.17 42), oklch(0.58 0.2 42));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
