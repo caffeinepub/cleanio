@@ -1,39 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Make admin page clearly accessible from the UI",
+  "title": "Restore missing admin link/button in navigation",
   "projectName": "Cleanio",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a clearly visible but discreet admin access link in the site footer (e.g., labeled 'Admin') in the Layout.tsx component that navigates to the /admin route, so administrators can find and access the admin login page without needing to know the direct URL.",
+      "text": "Add a visible admin link/button to the site Layout component (frontend/src/components/Layout.tsx) so users can navigate to the /admin route from the app. The link should appear in the footer and/or the header navigation, consistent with the existing Cleanio brand design system (deep charcoal + electric orange). It should be present on all pages.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-recent"
         ],
         "quotes": [
-          "unsure about admin page as i cannot find it on version 8"
+          "admin link/button is missing entirely"
         ]
       },
       "acceptanceCriteria": [
-        "A link labeled 'Admin' (or equivalent) is visible in the site footer on all pages.",
-        "Clicking the admin link navigates the user to the /admin route.",
-        "The ProtectedAdminRoute renders the AdminLoginForm when the user is not authenticated.",
-        "The admin link is visually unobtrusive (small, muted styling) so it does not distract regular customers.",
-        "The link is present on both desktop and mobile layouts."
+        "An 'Admin' link or button is visible in the Layout (header or footer) on every page of the app.",
+        "Clicking the Admin link navigates to the /admin route.",
+        "The link/button styling matches the existing Cleanio brand design (deep charcoal + electric orange palette).",
+        "The admin link is present on both desktop and mobile (hamburger menu) layouts."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/hooks/ (immutable paths).",
-    "Do not change the existing admin authentication logic in useAdminAuth.tsx or ProtectedAdminRoute.tsx.",
-    "Admin route (/admin) must remain password-protected."
+    "Do not modify any files under frontend/src/hooks/ or frontend/src/main.tsx.",
+    "Do not change the admin authentication logic or ProtectedAdminRoute behavior.",
+    "The /admin route must remain protected behind ProtectedAdminRoute."
   ],
   "nonGoals": [
     "Changing the admin password or authentication mechanism.",
-    "Redesigning the admin bookings page layout.",
-    "Adding a prominent top-navigation admin link that is highly visible to all users."
+    "Redesigning the admin bookings page itself.",
+    "Adding new backend endpoints or data models."
   ],
   "imageRequirements": {
     "required": [],

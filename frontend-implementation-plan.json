@@ -1,23 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Make admin page clearly accessible from the UI",
+  "title": "Restore missing admin link/button in navigation",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a discreet admin access link in the site footer that navigates to /admin",
+      "summary": "Add a visible admin link/button to the Layout component so users can navigate to the /admin route from any page",
       "acceptanceCriteria": [
-        "A link labeled 'Admin' (or equivalent) is visible in the site footer on all pages.",
-        "Clicking the admin link navigates the user to the /admin route.",
-        "The ProtectedAdminRoute renders the AdminLoginForm when the user is not authenticated.",
-        "The admin link is visually unobtrusive (small, muted styling) so it does not distract regular customers.",
-        "The link is present on both desktop and mobile layouts."
+        "An 'Admin' link or button is visible in the Layout (header or footer) on every page of the app.",
+        "Clicking the Admin link navigates to the /admin route.",
+        "The link/button styling matches the existing Cleanio brand design (deep charcoal + electric orange palette).",
+        "The admin link is present on both desktop and mobile (hamburger menu) layouts."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add an admin link to the footer section with discreet styling (small text, muted color) that navigates to /admin route using React Router Link component. Position the link in the footer alongside existing Cleanio branding text, ensuring it remains unobtrusive and does not interfere with the main customer experience. The link must be visible on both desktop and mobile layouts."
+          "description": "Add an Admin navigation link to both the desktop header navigation and the mobile hamburger menu. The link should navigate to '/admin' and be styled consistently with the existing Cleanio brand design system (deep charcoal + electric orange). Also add an Admin link to the footer section. Ensure the link appears on all pages and is accessible from both desktop and mobile layouts."
         }
       ]
     }

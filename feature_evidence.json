@@ -1,4 +1,23 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-add-a-visible-admin-link-button-to-the-site-layout-component-frontend-src-components-layout-tsx-so-users-can-navigate-to-the-admin-route-from-the-app-the-link-should-appear-in-the-footer-and-or-the-header-navigation-consistent-with-the-existing-cleanio-brand-design-system-deep-charcoal-electric-orange-it-should-be-present-on-all-pages",
+      "featureTitle": "Add a visible admin link/button to the site Layout component (frontend/src/components/Layout.tsx) so users can navigate to the /admin route from the app. The link should appear in the footer and/or the header navigation, consistent with the existing Cleanio brand design system (deep charcoal + electric orange). It should be present on all pages.",
+      "files": [
+        "frontend/src/components/Layout.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

@@ -1,23 +1,23 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Project with an admin access page feature; the admin link/button is missing in production (Version 10) and needs to be fixed.",
   "architectural_notes": [],
   "known_issues": [
-    "Admin page is not clearly accessible/findable in the current build"
+    "Admin link/button is missing entirely in Version 10 production; needs to be added/fixed so the admin page is accessible from the app."
   ],
   "isFixRequest": true,
-  "existing_features": [],
-  "new_feature_requests": [
+  "existing_features": [
     {
-      "id": "AR-1",
-      "summary": "Add a clearly visible but discreet admin access link in the site footer (e.g., labeled 'Admin') in the Layout.tsx component that navigates to the /admin route, so administrators can find and access the admin login page without needing to know the direct URL.",
+      "id": "feature-add-a-visible-admin-link-button-to-the-site-layout-component-frontend-src-components-layout-tsx-so-users-can-navigate-to-the-admin-route-from-the-app-the-link-should-appear-in-the-footer-and-or-the-header-navigation-consistent-with-the-existing-cleanio-brand-design-system-deep-charcoal-electric-orange-it-should-be-present-on-all-pages",
+      "title": "Add a visible admin link/button to the site Layout component (frontend/src/components/Layout.tsx) so users can navigate to the /admin route from the app. The link should appear in the footer and/or the header navigation, consistent with the existing Cleanio brand design system (deep charcoal + electric orange). It should be present on all pages.",
       "reqIds": [
         "REQ-1"
       ],
-      "status": "pending"
+      "version": 1
     }
   ],
+  "new_feature_requests": [],
   "projectName": "Cleanio",
   "clarification_mode": "instant",
   "clarification_rounds": 0

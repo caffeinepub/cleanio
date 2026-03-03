@@ -1,10 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Make the admin page easily discoverable by adding a discreet admin link in the site footer.
+**Goal:** Restore a visible Admin navigation link in the Cleanio app's Layout component so users can access the /admin route from any page.
 
 **Planned changes:**
-- Add a small, muted "Admin" link in the site footer (Layout.tsx) that navigates to the `/admin` route
-- Ensure the link is visible on both desktop and mobile layouts
+- Add an "Admin" link/button to the Layout component (`frontend/src/components/Layout.tsx`) in both the header navigation and footer
+- Ensure the Admin link is visible on all pages (desktop and mobile/hamburger menu)
+- Style the link/button using the existing Cleanio brand palette (deep charcoal + electric orange)
+- Link navigates to the `/admin` route (which remains protected by `ProtectedAdminRoute`)
 
-**User-visible outcome:** Administrators can find and access the admin login page via a discreet footer link on every page, without needing to know the direct URL.
+**User-visible outcome:** An "Admin" link is visible in the site header and/or footer on every page, allowing navigation to the protected admin area from anywhere in the app.
