@@ -25,6 +25,7 @@ import {
   RefreshCw,
   UserCheck,
 } from "lucide-react";
+import { QRCodeCanvas } from "qrcode.react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Booking, Status } from "../backend";
 import { useAdminAuth } from "../hooks/useAdminAuth";
@@ -246,7 +247,7 @@ function BookingCard({ booking }: { booking: Booking }) {
 
 // ---------- QR Code Modal ----------
 function QRCodeModal() {
-  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const [downloaded, setDownloaded] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -255,18 +256,18 @@ function QRCodeModal() {
       ? window.location.origin
       : "https://cleanio.icp0.io";
 
-  // Use Google Charts QR API (no library needed, works offline-friendly)
-  const qrImageUrl = `https://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(siteUrl)}&chco=111111&chld=M|2`;
-
   const handleDownload = useCallback(() => {
+    // Find the canvas element rendered by QRCodeCanvas inside the ref container
+    const canvas = canvasRef.current?.querySelector("canvas");
+    if (!canvas) return;
+    const dataUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
-    link.href = qrImageUrl;
+    link.href = dataUrl;
     link.download = "cleanio-booking-qr.png";
-    link.target = "_blank";
     link.click();
     setDownloaded(true);
     setTimeout(() => setDownloaded(false), 2500);
-  }, [qrImageUrl]);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -295,14 +296,17 @@ function QRCodeModal() {
         {/* QR Card */}
         <div className="flex flex-col items-center gap-5 py-2">
           {/* White QR background for scan compatibility */}
-          <div className="bg-white rounded-2xl p-5 shadow-lg border-4 border-brand-orange/30">
-            <img
-              ref={imgRef}
-              src={qrImageUrl}
-              alt="Cleanio booking QR code"
-              width={240}
-              height={240}
-              className="block"
+          <div
+            ref={canvasRef}
+            className="bg-white rounded-2xl p-5 shadow-lg border-4 border-brand-orange/30"
+          >
+            <QRCodeCanvas
+              value={siteUrl}
+              size={240}
+              bgColor="#ffffff"
+              fgColor="#111111"
+              level="M"
+              marginSize={1}
             />
           </div>
 
