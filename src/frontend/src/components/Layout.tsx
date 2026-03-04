@@ -51,9 +51,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             data-ocid="nav.home.link"
           >
             <img
-              src="/assets/file_000000006ec461f5905d0bdb5d01b34a(1)(1).png"
+              src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
               alt="Cleanio Bike Icon"
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain bg-white rounded-md p-0.5"
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -165,9 +165,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <img
-                src="/assets/file_000000006ec461f5905d0bdb5d01b34a(1)(1).png"
+                src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
                 alt="Cleanio Bike Icon"
-                className="h-7 w-auto object-contain"
+                className="h-7 w-auto object-contain bg-white rounded-md p-0.5"
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>

@@ -25,7 +25,6 @@ import {
   RefreshCw,
   UserCheck,
 } from "lucide-react";
-import QRCodeLib from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Booking, Status } from "../backend";
 import { useAdminAuth } from "../hooks/useAdminAuth";
@@ -247,8 +246,8 @@ function BookingCard({ booking }: { booking: Booking }) {
 
 // ---------- QR Code Modal ----------
 function QRCodeModal() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [qrUrl, setQrUrl] = useState<string>("");
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [downloaded, setDownloaded] = useState(false);
   const [open, setOpen] = useState(false);
 
   const siteUrl =
@@ -256,39 +255,18 @@ function QRCodeModal() {
       ? window.location.origin
       : "https://cleanio.icp0.io";
 
-  const generateQR = useCallback(async () => {
-    if (!canvasRef.current) return;
-    try {
-      await QRCodeLib.toCanvas(canvasRef.current, siteUrl, {
-        width: 240,
-        margin: 2,
-        color: { dark: "#111111", light: "#ffffff" },
-      });
-    } catch (err) {
-      console.error("QR generation failed:", err);
-    }
-  }, [siteUrl]);
+  // Use Google Charts QR API (no library needed, works offline-friendly)
+  const qrImageUrl = `https://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${encodeURIComponent(siteUrl)}&chco=111111&chld=M|2`;
 
-  // Generate QR when dialog opens
-  useEffect(() => {
-    if (open) {
-      // Small delay to ensure canvas is mounted in DOM
-      const id = setTimeout(() => {
-        generateQR();
-      }, 100);
-      return () => clearTimeout(id);
-    }
-  }, [open, generateQR]);
-
-  const handleDownload = () => {
-    if (!canvasRef.current) return;
-    const dataUrl = canvasRef.current.toDataURL("image/png");
+  const handleDownload = useCallback(() => {
     const link = document.createElement("a");
-    link.href = dataUrl;
+    link.href = qrImageUrl;
     link.download = "cleanio-booking-qr.png";
+    link.target = "_blank";
     link.click();
-    setQrUrl(dataUrl);
-  };
+    setDownloaded(true);
+    setTimeout(() => setDownloaded(false), 2500);
+  }, [qrImageUrl]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -318,7 +296,14 @@ function QRCodeModal() {
         <div className="flex flex-col items-center gap-5 py-2">
           {/* White QR background for scan compatibility */}
           <div className="bg-white rounded-2xl p-5 shadow-lg border-4 border-brand-orange/30">
-            <canvas ref={canvasRef} className="block" />
+            <img
+              ref={imgRef}
+              src={qrImageUrl}
+              alt="Cleanio booking QR code"
+              width={240}
+              height={240}
+              className="block"
+            />
           </div>
 
           {/* Branding label */}
@@ -345,12 +330,12 @@ function QRCodeModal() {
             Download QR Code
           </Button>
 
-          {qrUrl && (
+          {downloaded && (
             <p
               data-ocid="admin.qr_code.success_state"
               className="text-xs text-green-400 text-center"
             >
-              ✓ QR code saved as cleanio-booking-qr.png
+              ✓ QR code download started
             </p>
           )}
         </div>
