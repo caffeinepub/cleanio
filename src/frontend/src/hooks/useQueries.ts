@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import type {
   Booking,
   Capacity,
@@ -49,16 +50,38 @@ export interface CreateBookingParams {
 
 export function useCreateBooking() {
   const { actor } = useActor();
+  // Keep a ref so the latest actor is always accessible inside the mutation callback
+  const actorRef = useRef(actor);
+  actorRef.current = actor;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (params: CreateBookingParams) => {
-      if (!actor)
+      // If actor isn't ready yet, poll up to 5 seconds before giving up
+      let resolvedActor = actorRef.current;
+      if (!resolvedActor) {
+        resolvedActor = await new Promise<typeof actor>((resolve) => {
+          const deadline = Date.now() + 5000;
+          const interval = setInterval(() => {
+            if (actorRef.current) {
+              clearInterval(interval);
+              resolve(actorRef.current);
+            } else if (Date.now() >= deadline) {
+              clearInterval(interval);
+              resolve(null);
+            }
+          }, 500);
+        });
+      }
+
+      if (!resolvedActor) {
         throw new Error(
           "Service not ready yet. Please wait a moment and try again.",
         );
+      }
+
       try {
-        await actor.createBooking(
+        await resolvedActor.createBooking(
           params.id,
           params.customerName,
           params.phoneNumber,

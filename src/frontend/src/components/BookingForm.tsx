@@ -18,6 +18,7 @@ import {
   ServiceType,
   VehicleType,
 } from "../backend";
+import { useActor } from "../hooks/useActor";
 import { useCreateBooking } from "../hooks/useQueries";
 
 interface BookingFormProps {
@@ -54,6 +55,8 @@ export default function BookingForm({
 }: BookingFormProps) {
   const navigate = useNavigate();
   const createBooking = useCreateBooking();
+  const { actor, isFetching: actorFetching } = useActor();
+  const isActorReady = !!actor && !actorFetching;
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -350,13 +353,18 @@ export default function BookingForm({
       <Button
         type="submit"
         data-ocid="booking.submit_button"
-        disabled={createBooking.isPending}
-        className="w-full bg-brand-orange hover:bg-brand-orange-light text-charcoal font-bold py-3 rounded-xl text-base shadow-orange-glow hover:shadow-orange-glow-lg transition-all active:scale-95"
+        disabled={createBooking.isPending || !isActorReady}
+        className="w-full bg-brand-orange hover:bg-brand-orange-light text-charcoal font-bold py-3 rounded-xl text-base shadow-orange-glow hover:shadow-orange-glow-lg transition-all active:scale-95 disabled:opacity-60"
       >
         {createBooking.isPending ? (
           <>
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             Booking...
+          </>
+        ) : !isActorReady ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Connecting to service...
           </>
         ) : (
           "Confirm Booking"

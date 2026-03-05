@@ -25,9 +25,9 @@ import {
   RefreshCw,
   UserCheck,
 } from "lucide-react";
-import { QRCodeCanvas } from "qrcode.react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Booking, Status } from "../backend";
+import { QRCodeCanvas } from "../components/QRCode";
 import { useAdminAuth } from "../hooks/useAdminAuth";
 import {
   useAssignMechanic,
@@ -305,8 +305,6 @@ function QRCodeModal() {
               size={240}
               bgColor="#ffffff"
               fgColor="#111111"
-              level="M"
-              marginSize={1}
             />
           </div>
 
