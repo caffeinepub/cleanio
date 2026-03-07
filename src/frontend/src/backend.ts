@@ -125,7 +125,8 @@ export enum Status {
 }
 export enum VehicleType {
     motorcycle = "motorcycle",
-    scooter = "scooter"
+    scooter = "scooter",
+    electric = "electric"
 }
 export interface backendInterface {
     assignMechanic(id: string, mechanicName: string): Promise<void>;
@@ -287,8 +288,10 @@ function from_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Ui
     motorcycle: null;
 } | {
     scooter: null;
+} | {
+    electric: null;
 }): VehicleType {
-    return "motorcycle" in value ? VehicleType.motorcycle : "scooter" in value ? VehicleType.scooter : value;
+    return "motorcycle" in value ? VehicleType.motorcycle : "scooter" in value ? VehicleType.scooter : "electric" in value ? VehicleType.electric : value;
 }
 function from_candid_variant_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     repair: null;
@@ -370,11 +373,15 @@ function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8
     motorcycle: null;
 } | {
     scooter: null;
+} | {
+    electric: null;
 } {
     return value == VehicleType.motorcycle ? {
         motorcycle: null
     } : value == VehicleType.scooter ? {
         scooter: null
+    } : value == VehicleType.electric ? {
+        electric: null
     } : value;
 }
 function to_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Status): {

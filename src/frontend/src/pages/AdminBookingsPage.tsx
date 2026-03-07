@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Bell,
   ClipboardList,
+  CreditCard,
   Download,
   Loader2,
   LogOut,
@@ -26,8 +27,9 @@ import {
   UserCheck,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { type Booking, Status } from "../backend";
+import { type Booking, Status, VehicleType } from "../backend";
 import { QRCodeCanvas } from "../components/QRCode";
+import { useActor } from "../hooks/useActor";
 import { useAdminAuth } from "../hooks/useAdminAuth";
 import {
   useAssignMechanic,
@@ -46,6 +48,7 @@ const SERVICE_LABELS: Record<string, string> = {
 const VEHICLE_LABELS: Record<string, string> = {
   scooter: "🛵 Scooter",
   motorcycle: "🏍️ Motorcycle",
+  electric: "⚡ Electric",
 };
 
 const CAPACITY_LABELS: Record<string, string> = {
@@ -104,6 +107,7 @@ function BookingCard({ booking }: { booking: Booking }) {
   };
 
   const cleaningLabel = getCleaningSubOptionLabel(booking);
+  const isEV = booking.vehicleType === VehicleType.electric;
 
   return (
     <div className="bg-card border border-border rounded-2xl p-5 hover:border-brand-orange/50 transition-all duration-200">
@@ -132,12 +136,20 @@ function BookingCard({ booking }: { booking: Booking }) {
               {SERVICE_LABELS[booking.serviceType] || booking.serviceType}
               {cleaningLabel && ` – ${cleaningLabel}`}
             </span>
-            <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
-              {VEHICLE_LABELS[booking.vehicleType] || booking.vehicleType}
-            </span>
-            <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
-              {CAPACITY_LABELS[booking.capacity] || booking.capacity}
-            </span>
+            {isEV ? (
+              <span className="bg-green-500/10 text-green-400 border border-green-500/30 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+                ⚡ Electric Vehicle
+              </span>
+            ) : (
+              <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
+                {VEHICLE_LABELS[booking.vehicleType] || booking.vehicleType}
+              </span>
+            )}
+            {!isEV && (
+              <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
+                {CAPACITY_LABELS[booking.capacity] || booking.capacity}
+              </span>
+            )}
           </div>
 
           {/* Address */}
@@ -242,6 +254,187 @@ function BookingCard({ booking }: { booking: Booking }) {
         </div>
       </div>
     </div>
+  );
+}
+
+// ---------- Stripe Config Modal ----------
+function StripeConfigModal() {
+  const { actor } = useActor();
+  const [open, setOpen] = useState(false);
+  const [secretKey, setSecretKey] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [checkingConfig, setCheckingConfig] = useState(false);
+  const [isConfigured, setIsConfigured] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Check if Stripe is already configured when the modal opens
+  useEffect(() => {
+    if (!open || !actor) return;
+    setCheckingConfig(true);
+    setError(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (actor as any)
+      .isStripeConfigured()
+      .then((result: boolean) => {
+        setIsConfigured(result);
+      })
+      .catch(() => {
+        setIsConfigured(false);
+      })
+      .finally(() => {
+        setCheckingConfig(false);
+      });
+  }, [open, actor]);
+
+  const handleSave = async () => {
+    if (!actor || !secretKey.trim()) return;
+    setSaving(true);
+    setError(null);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (actor as any).setStripeConfiguration({
+        secretKey: secretKey.trim(),
+        allowedCountries: ["IN"],
+      });
+      setSaved(true);
+      setIsConfigured(true);
+      setSecretKey("");
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Failed to save: ${msg}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          data-ocid="admin.stripe_config.open_modal_button"
+          className={`border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange transition-all ${
+            isConfigured ? "border-green-500/50 text-green-400" : ""
+          }`}
+        >
+          <CreditCard className="w-4 h-4 mr-2" />
+          {isConfigured === true ? "Payments ✓" : "Setup Payments"}
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        data-ocid="admin.stripe_config.dialog"
+        className="bg-card border-border max-w-sm w-full"
+      >
+        <DialogHeader>
+          <DialogTitle className="text-foreground font-display text-lg flex items-center gap-2">
+            <CreditCard className="w-5 h-5 text-brand-orange" />
+            Stripe Payment Setup
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 py-2">
+          {checkingConfig ? (
+            <div
+              className="flex items-center gap-2 text-muted-foreground text-sm"
+              data-ocid="admin.stripe_config.loading_state"
+            >
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Checking configuration…
+            </div>
+          ) : isConfigured ? (
+            <div
+              className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 rounded-xl p-4"
+              data-ocid="admin.stripe_config.success_state"
+            >
+              <span className="text-2xl">✅</span>
+              <div>
+                <p className="text-sm font-semibold text-green-400">
+                  Payments Configured
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Stripe is active. Customers can pay online for Premium Plans.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-brand-orange/5 border border-brand-orange/20 rounded-xl p-3 text-xs text-muted-foreground leading-relaxed">
+              Enter your Stripe Secret Key to enable online payments for Premium
+              Plans. You can find this in your{" "}
+              <span className="text-brand-orange">Stripe Dashboard</span> →
+              Developers → API keys.
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label
+              htmlFor="stripe-secret-key"
+              className="text-xs text-muted-foreground font-medium"
+            >
+              {isConfigured ? "Update Stripe Secret Key" : "Stripe Secret Key"}
+            </label>
+            <Input
+              id="stripe-secret-key"
+              type="password"
+              value={secretKey}
+              onChange={(e) => setSecretKey(e.target.value)}
+              placeholder="sk_live_... or sk_test_..."
+              data-ocid="admin.stripe_config.input"
+              className="bg-charcoal border-border text-foreground placeholder:text-muted-foreground focus:border-brand-orange text-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSave();
+                }
+              }}
+            />
+          </div>
+
+          {error && (
+            <p
+              className="text-xs text-red-400"
+              data-ocid="admin.stripe_config.error_state"
+            >
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-2 pt-1">
+            <Button
+              onClick={handleSave}
+              disabled={saving || !secretKey.trim()}
+              data-ocid="admin.stripe_config.save_button"
+              className={`flex-1 font-semibold transition-all ${
+                saved
+                  ? "bg-green-600 hover:bg-green-600 text-white"
+                  : "bg-brand-orange hover:bg-brand-orange-light text-charcoal"
+              }`}
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving…
+                </>
+              ) : saved ? (
+                "✓ Saved!"
+              ) : (
+                "Save Configuration"
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              data-ocid="admin.stripe_config.cancel_button"
+              className="border-border text-muted-foreground hover:text-foreground hover:bg-charcoal-light"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -421,6 +614,9 @@ export default function AdminBookingsPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          {/* Stripe Config button */}
+          <StripeConfigModal />
+
           {/* QR Code button */}
           <QRCodeModal />
 

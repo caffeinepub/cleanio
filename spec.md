@@ -1,23 +1,38 @@
 # Cleanio
 
 ## Current State
-Full-stack two-wheeler doorstep service app with booking forms for Full Service, Repair, and Cleaning. Backend stores bookings in a stable Map. The backend recently had `generate_motoko_code` run which added `(with migration = Migration.run)` actor syntax and introduced a `migration.mo` module. The `useCreateBooking` hook calls the actor's `createBooking` function. The WhatsApp floating button and admin panel (with notification badge and QR code) are all working. Booking is currently failing.
+- Two-wheeler doorstep service app with Full Service, Repair, Cleaning (with sub-options), and AI repair bot
+- Bookings stored in stable Map on backend, admin panel with mechanic assignment and status updates
+- Admin login protected with password, QR code modal in admin panel
+- WhatsApp floating button and Support section
+- Electric vehicle support with ₹999 flat rate
+- QR code uses a custom inline generator that fails on long URLs (crashes or shows nothing)
 
 ## Requested Changes (Diff)
 
 ### Add
-- Nothing new to add
+- Premium Annual Plans page: 3-service plan and 4-service plan with Stripe checkout
+- Stripe payment integration for premium plans (createCheckoutSession + success/failure routes)
+- PaymentSuccess and PaymentFailure pages at /payment-success and /payment-failure
+- Stripe admin configuration UI (StripeConfiguration) accessible from admin panel
+- qrcode npm library replacing the broken custom QR canvas generator
 
 ### Modify
-- Fix `useQueries.ts` `useCreateBooking` to add a retry mechanism and more robust error handling, including a check that actor is initialized before submitting
-- Add a loading/retry state to `BookingForm.tsx` so if the actor isn't ready yet, it shows "Initializing..." and retries after a short delay rather than immediately failing
-- Ensure the `useActor` hook properly waits for the actor to be ready before allowing booking submissions
+- QRCode.tsx: Replace custom implementation with proper `qrcode` npm library (canvas API)
+- AdminBookingsPage: Add Stripe configuration link in admin panel
+- HomePage: Add "Premium Plans" card/section linking to /premium-plans
+- App.tsx / router: Add routes for /premium-plans, /payment-success, /payment-failure
 
 ### Remove
-- Nothing to remove
+- The entire custom QR code math implementation in QRCode.tsx (GF tables, RS encode, buildQRMatrix)
 
 ## Implementation Plan
-1. In `useQueries.ts`: update `useCreateBooking` so if actor is null, wait up to 3 seconds for actor to become available (poll every 500ms) before throwing the "not ready" error
-2. In `BookingForm.tsx`: show a subtle "Connecting to service..." state if actor is not yet ready, and disable the submit button with that message instead of failing silently
-3. Ensure the submit button shows clear feedback at all stages: idle, loading, error
-4. The actual backend API signature and types remain unchanged
+1. Install `qrcode` npm library and `@types/qrcode`
+2. Rewrite QRCode.tsx to use `qrcode` library to render QR to canvas element
+3. Generate updated Motoko backend with Stripe ShoppingItem type and createCheckoutSession
+4. Add PremiumPlansPage with 3-service (₹2499) and 4-service (₹2999) annual plan cards + Stripe checkout
+5. Add PaymentSuccessPage and PaymentFailurePage 
+6. Add useCreateCheckoutSession hook
+7. Add /premium-plans, /payment-success, /payment-failure routes to router
+8. Add Stripe admin config section in AdminBookingsPage
+9. Add Premium Plans entry point from HomePage services section or nav

@@ -50,6 +50,19 @@ const services = [
     path: "/cleaning",
     color: "from-green-500/20 to-transparent",
   },
+  {
+    id: "premium-plans",
+    icon: "",
+    emoji: "⭐",
+    title: "Premium Plans",
+    description:
+      "Annual service plans with 3 or 4 full service visits at your doorstep. Save up to ₹597/year.",
+    pricing: "From ₹2499/yr",
+    pricingNote: "Annual membership",
+    badge: "Best Value",
+    path: "/premium-plans",
+    color: "from-yellow-500/20 to-transparent",
+  },
 ];
 
 const features = [
@@ -190,7 +203,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service) => (
             <button
               key={service.id}

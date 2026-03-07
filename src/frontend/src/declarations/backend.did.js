@@ -11,6 +11,7 @@ import { IDL } from '@icp-sdk/core/candid';
 export const VehicleType = IDL.Variant({
   'motorcycle' : IDL.Null,
   'scooter' : IDL.Null,
+  'electric' : IDL.Null,
 });
 export const Capacity = IDL.Variant({
   'upTo200cc' : IDL.Null,
@@ -72,6 +73,7 @@ export const idlFactory = ({ IDL }) => {
   const VehicleType = IDL.Variant({
     'motorcycle' : IDL.Null,
     'scooter' : IDL.Null,
+    'electric' : IDL.Null,
   });
   const Capacity = IDL.Variant({
     'upTo200cc' : IDL.Null,

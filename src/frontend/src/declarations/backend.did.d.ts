@@ -34,7 +34,8 @@ export type Status = { 'pending' : null } |
   { 'completed' : null } |
   { 'confirmed' : null };
 export type VehicleType = { 'motorcycle' : null } |
-  { 'scooter' : null };
+  { 'scooter' : null } |
+  { 'electric' : null };
 export interface _SERVICE {
   'assignMechanic' : ActorMethod<[string, string], undefined>,
   'createBooking' : ActorMethod<

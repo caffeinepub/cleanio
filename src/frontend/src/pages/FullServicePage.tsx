@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle } from "lucide-react";
+import { useState } from "react";
 import { ServiceType } from "../backend";
-import BookingForm from "../components/BookingForm";
+import BookingForm, { type VehicleCategory } from "../components/BookingForm";
 
-const INCLUDED = [
+const PETROL_INCLUDED = [
   "Engine oil change",
   "Air filter cleaning",
   "Spark plug check",
@@ -16,8 +16,25 @@ const INCLUDED = [
   "25-point inspection",
 ];
 
+const EV_INCLUDED = [
+  "Battery health check",
+  "Motor inspection",
+  "Controller & wiring check",
+  "Tyre pressure check",
+  "Brake adjustment",
+  "Full wash & clean",
+  "Regenerative braking check",
+  "Charging port inspection",
+  "25-point EV inspection",
+];
+
 export default function FullServicePage() {
   const navigate = useNavigate();
+  const [vehicleCategory, setVehicleCategory] =
+    useState<VehicleCategory>("scooter");
+
+  const isElectric = vehicleCategory === "electric";
+  const includedItems = isElectric ? EV_INCLUDED : PETROL_INCLUDED;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -49,13 +66,28 @@ export default function FullServicePage() {
 
         {/* What's Included */}
         <div className="bg-card border border-border rounded-2xl p-5 mt-4">
-          <h3 className="font-semibold text-foreground mb-3 text-sm">
-            What's Included
-          </h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-foreground text-sm">
+              What's Included
+            </h3>
+            <span
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-all ${
+                isElectric
+                  ? "bg-green-500/10 text-green-400 border-green-500/30"
+                  : "bg-brand-orange/10 text-brand-orange border-brand-orange/30"
+              }`}
+            >
+              {isElectric ? "⚡ Electric" : "⛽ Petrol"}
+            </span>
+          </div>
           <div className="grid grid-cols-2 gap-2">
-            {INCLUDED.map((item) => (
+            {includedItems.map((item) => (
               <div key={item} className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-brand-orange flex-shrink-0" />
+                <CheckCircle
+                  className={`w-3.5 h-3.5 flex-shrink-0 ${
+                    isElectric ? "text-green-400" : "text-brand-orange"
+                  }`}
+                />
                 <span className="text-xs text-muted-foreground">{item}</span>
               </div>
             ))}
@@ -72,6 +104,8 @@ export default function FullServicePage() {
           serviceType={ServiceType.fullService}
           showCapacitySelector={true}
           showPricing={true}
+          vehicleCategory={vehicleCategory}
+          onVehicleCategoryChange={setVehicleCategory}
         />
       </div>
     </div>

@@ -43,7 +43,8 @@ export enum Status {
 }
 export enum VehicleType {
     motorcycle = "motorcycle",
-    scooter = "scooter"
+    scooter = "scooter",
+    electric = "electric"
 }
 export interface backendInterface {
     assignMechanic(id: string, mechanicName: string): Promise<void>;

@@ -35,6 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { label: "Full Service", path: "/full-service" },
     { label: "Repair", path: "/repair" },
     { label: "Cleaning", path: "/cleaning" },
+    { label: "Plans", path: "/premium-plans" },
     { label: "Support", path: "/#support" },
   ];
 

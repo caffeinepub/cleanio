@@ -2,11 +2,11 @@ import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import Runtime "mo:core/Runtime";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
-  type VehicleType = { #scooter; #motorcycle };
+  type VehicleType = { #scooter; #motorcycle; #electric };
   type Capacity = { #upTo200cc; #above200cc };
   type ServiceType = { #fullService; #repair; #cleaning };
   type CleaningSubOption = { #colourFoamWashing : Nat; #normalFoamWashing : Nat };

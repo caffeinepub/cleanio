@@ -21,6 +21,8 @@ import {
 import { useActor } from "../hooks/useActor";
 import { useCreateBooking } from "../hooks/useQueries";
 
+export type VehicleCategory = "scooter" | "motorcycle" | "electric";
+
 interface BookingFormProps {
   serviceType: ServiceType;
   repairDetails?: string;
@@ -29,6 +31,8 @@ interface BookingFormProps {
   showPricing?: boolean;
   cleaningSubOption?: "colourFoam" | "normalFoam";
   cleaningPrice?: number;
+  vehicleCategory?: VehicleCategory;
+  onVehicleCategoryChange?: (cat: VehicleCategory) => void;
 }
 
 const TIME_SLOTS = [
@@ -52,6 +56,8 @@ export default function BookingForm({
   showPricing = false,
   cleaningSubOption,
   cleaningPrice,
+  vehicleCategory: vehicleCategoryProp,
+  onVehicleCategoryChange,
 }: BookingFormProps) {
   const navigate = useNavigate();
   const createBooking = useCreateBooking();
@@ -61,15 +67,32 @@ export default function BookingForm({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [vehicleType, setVehicleType] = useState<VehicleType>(
-    VehicleType.scooter,
-  );
+  const [internalVehicleCategory, setInternalVehicleCategory] =
+    useState<VehicleCategory>("scooter");
   const [capacity, setCapacity] = useState<Capacity>(defaultCapacity);
   const [timeSlot, setTimeSlot] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const price = capacity === Capacity.upTo200cc ? 899 : 1199;
+  // Use controlled prop if provided, otherwise use internal state
+  const vehicleCategory = vehicleCategoryProp ?? internalVehicleCategory;
+  const setVehicleCategory = (cat: VehicleCategory) => {
+    setInternalVehicleCategory(cat);
+    onVehicleCategoryChange?.(cat);
+  };
+
+  // Derive backend vehicleType from vehicleCategory
+  const vehicleType: VehicleType =
+    vehicleCategory === "motorcycle"
+      ? VehicleType.motorcycle
+      : vehicleCategory === "electric"
+        ? VehicleType.electric
+        : VehicleType.scooter;
+
+  const isElectric = vehicleCategory === "electric";
+
+  // Price: electric full service = ₹999 flat; others use capacity
+  const price = isElectric ? 999 : capacity === Capacity.upTo200cc ? 899 : 1199;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -100,7 +123,8 @@ export default function BookingForm({
     setSubmitError(null);
 
     const bookingId = `BK-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-    const fullAddress = `${address} | Slot: ${timeSlot}`;
+    const evTag = isElectric ? " [Electric Vehicle]" : "";
+    const fullAddress = `${address} | Slot: ${timeSlot}${evTag}`;
 
     const subOption = buildCleaningSubOption();
 
@@ -111,7 +135,7 @@ export default function BookingForm({
         phoneNumber: phone.trim(),
         address: fullAddress,
         vehicleType,
-        capacity,
+        capacity: isElectric ? Capacity.upTo200cc : capacity,
         serviceType,
         repairDetails: repairDetails ? repairDetails : null,
         cleaningSubOption: subOption,
@@ -141,57 +165,78 @@ export default function BookingForm({
           <Label className="text-foreground font-semibold">
             Engine Capacity
           </Label>
-          <RadioGroup
-            value={capacity}
-            onValueChange={(v) => setCapacity(v as Capacity)}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          >
-            <label
-              htmlFor="upto200"
-              className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                capacity === Capacity.upTo200cc
-                  ? "border-brand-orange bg-brand-orange/10"
-                  : "border-border hover:border-brand-orange/50"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value={Capacity.upTo200cc} id="upto200" />
-                <div>
-                  <p className="font-semibold text-foreground text-sm">
-                    Upto 200cc
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Scooters, small bikes
-                  </p>
-                </div>
-              </div>
-              <span className="text-brand-orange font-black text-lg">₹899</span>
-            </label>
 
-            <label
-              htmlFor="above200"
-              className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                capacity === Capacity.above200cc
-                  ? "border-brand-orange bg-brand-orange/10"
-                  : "border-border hover:border-brand-orange/50"
-              }`}
-            >
+          {isElectric ? (
+            /* Electric flat-rate card */
+            <div className="flex items-center justify-between p-4 rounded-xl border-2 border-green-500/60 bg-green-500/10">
               <div className="flex items-center gap-3">
-                <RadioGroupItem value={Capacity.above200cc} id="above200" />
+                <span className="text-xl">⚡</span>
                 <div>
                   <p className="font-semibold text-foreground text-sm">
-                    Above 200cc
+                    Electric – Flat Rate
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Sports, cruiser bikes
+                    All electric two-wheelers
                   </p>
                 </div>
               </div>
-              <span className="text-brand-orange font-black text-lg">
-                ₹1199
-              </span>
-            </label>
-          </RadioGroup>
+              <span className="text-green-400 font-black text-lg">₹999</span>
+            </div>
+          ) : (
+            <RadioGroup
+              value={capacity}
+              onValueChange={(v) => setCapacity(v as Capacity)}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
+              <label
+                htmlFor="upto200"
+                className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  capacity === Capacity.upTo200cc
+                    ? "border-brand-orange bg-brand-orange/10"
+                    : "border-border hover:border-brand-orange/50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={Capacity.upTo200cc} id="upto200" />
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">
+                      Upto 200cc
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Scooters, small bikes
+                    </p>
+                  </div>
+                </div>
+                <span className="text-brand-orange font-black text-lg">
+                  ₹899
+                </span>
+              </label>
+
+              <label
+                htmlFor="above200"
+                className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  capacity === Capacity.above200cc
+                    ? "border-brand-orange bg-brand-orange/10"
+                    : "border-border hover:border-brand-orange/50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={Capacity.above200cc} id="above200" />
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">
+                      Above 200cc
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Sports, cruiser bikes
+                    </p>
+                  </div>
+                </div>
+                <span className="text-brand-orange font-black text-lg">
+                  ₹1199
+                </span>
+              </label>
+            </RadioGroup>
+          )}
 
           {showPricing && (
             <div className="flex items-center justify-between p-4 bg-brand-orange/10 border border-brand-orange/30 rounded-xl">
@@ -227,34 +272,47 @@ export default function BookingForm({
       <div className="space-y-3">
         <Label className="text-foreground font-semibold">Vehicle Type</Label>
         <RadioGroup
-          value={vehicleType}
-          onValueChange={(v) => setVehicleType(v as VehicleType)}
-          className="flex gap-4"
+          value={vehicleCategory}
+          onValueChange={(v) => setVehicleCategory(v as VehicleCategory)}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3"
         >
           <label
             htmlFor="scooter"
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all flex-1 ${
-              vehicleType === VehicleType.scooter
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+              vehicleCategory === "scooter"
                 ? "border-brand-orange bg-brand-orange/10"
                 : "border-border hover:border-brand-orange/50"
             }`}
           >
-            <RadioGroupItem value={VehicleType.scooter} id="scooter" />
+            <RadioGroupItem value="scooter" id="scooter" />
             <span className="text-sm font-medium text-foreground">
               🛵 Scooter
             </span>
           </label>
           <label
             htmlFor="motorcycle"
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all flex-1 ${
-              vehicleType === VehicleType.motorcycle
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+              vehicleCategory === "motorcycle"
                 ? "border-brand-orange bg-brand-orange/10"
                 : "border-border hover:border-brand-orange/50"
             }`}
           >
-            <RadioGroupItem value={VehicleType.motorcycle} id="motorcycle" />
+            <RadioGroupItem value="motorcycle" id="motorcycle" />
             <span className="text-sm font-medium text-foreground">
               🏍️ Motorcycle
+            </span>
+          </label>
+          <label
+            htmlFor="electric"
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+              vehicleCategory === "electric"
+                ? "border-green-500 bg-green-500/10"
+                : "border-border hover:border-green-500/50"
+            }`}
+          >
+            <RadioGroupItem value="electric" id="electric" />
+            <span className="text-sm font-medium text-foreground">
+              ⚡ Electric
             </span>
           </label>
         </RadioGroup>
