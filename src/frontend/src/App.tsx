@@ -13,9 +13,6 @@ import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import CleaningPage from "./pages/CleaningPage";
 import FullServicePage from "./pages/FullServicePage";
 import HomePage from "./pages/HomePage";
-import PaymentFailurePage from "./pages/PaymentFailurePage";
-import PaymentSuccessPage from "./pages/PaymentSuccessPage";
-import PremiumPlansPage from "./pages/PremiumPlansPage";
 import RepairPage from "./pages/RepairPage";
 
 // Root route with Layout
@@ -64,24 +61,6 @@ const confirmationRoute = createRoute({
   }),
 });
 
-const premiumPlansRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/premium-plans",
-  component: PremiumPlansPage,
-});
-
-const paymentSuccessRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/payment-success",
-  component: PaymentSuccessPage,
-});
-
-const paymentFailureRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/payment-failure",
-  component: PaymentFailurePage,
-});
-
 const adminBookingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin/bookings",
@@ -109,9 +88,6 @@ const routeTree = rootRoute.addChildren([
   repairRoute,
   cleaningRoute,
   confirmationRoute,
-  premiumPlansRoute,
-  paymentSuccessRoute,
-  paymentFailureRoute,
   adminBookingsRoute,
   adminRoute,
 ]);
