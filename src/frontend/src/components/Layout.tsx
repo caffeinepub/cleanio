@@ -22,6 +22,12 @@ function useNewBookingCount() {
   return { badgeCount };
 }
 
+function handleLogoError(e: React.SyntheticEvent<HTMLImageElement>) {
+  const target = e.currentTarget;
+  target.onerror = null;
+  target.src = "/assets/generated/bike-logo-box.dim_200x200.png";
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
@@ -59,6 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
               alt="Cleanio Bike Icon"
               className="h-10 w-auto object-contain bg-white rounded-md p-0.5"
+              onError={handleLogoError}
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -219,6 +226,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
                 alt="Cleanio Bike Icon"
                 className="h-7 w-auto object-contain bg-white rounded-md p-0.5"
+                onError={handleLogoError}
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>

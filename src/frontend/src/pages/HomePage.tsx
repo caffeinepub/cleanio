@@ -354,7 +354,7 @@ export default function HomePage() {
             </a>
 
             <p className="text-muted-foreground text-sm">
-              Available Monday – Saturday, 9 AM – 7 PM
+              Available Monday – Sunday, 9 AM – 7 PM
             </p>
           </div>
         </div>
