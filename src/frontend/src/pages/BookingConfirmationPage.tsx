@@ -6,6 +6,7 @@ import {
   CheckCircle,
   Home,
   Loader2,
+  Phone,
   UserCheck,
 } from "lucide-react";
 import { useGetBooking } from "../hooks/useQueries";
@@ -61,7 +62,7 @@ export default function BookingConfirmationPage() {
         </p>
 
         {/* Booking Details */}
-        <div className="bg-charcoal-light border border-border rounded-2xl p-5 text-left space-y-3 mb-8">
+        <div className="bg-charcoal-light border border-border rounded-2xl p-5 text-left space-y-3 mb-6">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm">Booking ID</span>
             <span className="text-brand-orange font-mono font-bold text-sm">
@@ -104,7 +105,11 @@ export default function BookingConfirmationPage() {
               <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
             ) : (
               <span
-                className={`text-sm font-medium ${booking?.mechanicName ? "text-foreground" : "text-muted-foreground italic"}`}
+                className={`text-sm font-medium ${
+                  booking?.mechanicName
+                    ? "text-foreground"
+                    : "text-muted-foreground italic"
+                }`}
               >
                 {booking?.mechanicName ?? "Not yet assigned"}
               </span>
@@ -112,15 +117,23 @@ export default function BookingConfirmationPage() {
           </div>
         </div>
 
-        {/* Info */}
-        <div className="bg-brand-orange/10 border border-brand-orange/20 rounded-xl p-4 mb-8 text-left">
-          <p className="text-sm text-foreground font-medium mb-1">
-            📞 What happens next?
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Our team will call you to confirm the booking and provide the
-            technician's details. Keep your phone handy!
-          </p>
+        {/* Call Confirmation Banner */}
+        <div className="bg-green-500/10 border border-green-500/30 rounded-2xl p-5 mb-8 text-left">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Phone className="w-5 h-5 text-green-400" />
+            </div>
+            <div>
+              <p className="text-sm text-foreground font-semibold mb-1">
+                Our team will call you to confirm
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                A Cleanio team member will call you on your registered number
+                shortly to confirm your booking, share the technician's details,
+                and answer any questions. Please keep your phone handy!
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Actions */}

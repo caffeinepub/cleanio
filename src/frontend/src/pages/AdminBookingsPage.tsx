@@ -21,6 +21,7 @@ import {
   Download,
   Loader2,
   LogOut,
+  Phone,
   QrCode,
   RefreshCw,
   UserCheck,
@@ -106,6 +107,7 @@ function BookingCard({ booking }: { booking: Booking }) {
 
   const cleaningLabel = getCleaningSubOptionLabel(booking);
   const isEV = booking.vehicleType === VehicleType.electric;
+  const isPending = localStatus === Status.pending;
 
   return (
     <div className="bg-card border border-border rounded-2xl p-5 hover:border-brand-orange/50 transition-all duration-200">
@@ -127,6 +129,24 @@ function BookingCard({ booking }: { booking: Booking }) {
               {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
             </span>
           </div>
+
+          {/* Call Customer Button — prominent for pending bookings */}
+          <a
+            href={`tel:${booking.phoneNumber}`}
+            className={`flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition-all ${
+              isPending
+                ? "bg-green-500 hover:bg-green-400 text-white shadow-md"
+                : "bg-charcoal-light border border-border text-muted-foreground hover:border-green-500/50 hover:text-green-400"
+            }`}
+          >
+            <Phone className="w-4 h-4" />
+            Call to Confirm: {booking.phoneNumber}
+            {isPending && (
+              <span className="ml-1 bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">
+                Needs Call
+              </span>
+            )}
+          </a>
 
           {/* Service Info */}
           <div className="flex flex-wrap gap-2">
@@ -267,7 +287,6 @@ function QRCodeModal() {
       : "https://cleanio.icp0.io";
 
   const handleDownload = useCallback(() => {
-    // Find the canvas element rendered by QRCodeCanvas inside the ref container
     const canvas = canvasRef.current?.querySelector("canvas");
     if (!canvas) return;
     const dataUrl = canvas.toDataURL("image/png");
@@ -305,7 +324,6 @@ function QRCodeModal() {
 
         {/* QR Card */}
         <div className="flex flex-col items-center gap-5 py-2">
-          {/* White QR background for scan compatibility */}
           <div
             ref={canvasRef}
             className="bg-white rounded-2xl p-5 shadow-lg border-4 border-brand-orange/30"
@@ -318,7 +336,6 @@ function QRCodeModal() {
             />
           </div>
 
-          {/* Branding label */}
           <div className="text-center space-y-1">
             <p className="font-poppins text-xl font-bold">
               <span className="text-brand-orange">Clean</span>
@@ -332,7 +349,6 @@ function QRCodeModal() {
             </p>
           </div>
 
-          {/* Action buttons */}
           <Button
             onClick={handleDownload}
             data-ocid="admin.qr_code.download.button"
@@ -362,7 +378,6 @@ export default function AdminBookingsPage() {
   const { logout } = useAdminAuth();
   const [filter, setFilter] = useState<string>("all");
 
-  // ── Notification badge logic ──────────────────────────────────────────────
   const totalCount = bookings?.length ?? 0;
 
   const readLastSeenFromStorage = useCallback((): number => {
@@ -379,7 +394,6 @@ export default function AdminBookingsPage() {
   );
   const newBookingCount = Math.max(0, totalCount - lastSeenCount);
 
-  // Once we have real data and page is loaded, mark all as seen
   useEffect(() => {
     if (!isLoading && bookings !== undefined && totalCount > 0) {
       try {
@@ -391,7 +405,6 @@ export default function AdminBookingsPage() {
     }
   }, [isLoading, bookings, totalCount]);
 
-  // ── Publish new count to Layout badge via custom event ────────────────────
   useEffect(() => {
     const prevSeen = readLastSeenFromStorage();
     const count = isLoading ? 0 : Math.max(0, totalCount - prevSeen);
@@ -400,7 +413,6 @@ export default function AdminBookingsPage() {
     );
   }, [isLoading, totalCount, readLastSeenFromStorage]);
 
-  // ── Filters ───────────────────────────────────────────────────────────────
   const filtered =
     bookings?.filter((b) => filter === "all" || b.status === filter) ?? [];
 
@@ -431,9 +443,7 @@ export default function AdminBookingsPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {/* QR Code button */}
           <QRCodeModal />
-
           <Button
             variant="outline"
             size="sm"
@@ -459,6 +469,18 @@ export default function AdminBookingsPage() {
           </Button>
         </div>
       </div>
+
+      {/* Pending Call Reminder Banner */}
+      {counts.pending > 0 && (
+        <div className="flex items-center gap-3 mb-6 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-xl">
+          <Phone className="w-4 h-4 text-green-400 flex-shrink-0 animate-pulse" />
+          <p className="text-sm text-green-400 font-medium">
+            {counts.pending} pending{" "}
+            {counts.pending === 1 ? "booking" : "bookings"} — call the customer
+            to confirm!
+          </p>
+        </div>
+      )}
 
       {/* New Bookings Banner */}
       {newBookingCount > 0 && (
