@@ -1,10 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, MessageCircle, Shield, X } from "lucide-react";
+import { Menu, Shield, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const LOGO_SRC = "/assets/generated/cleanio-icon-fresh.dim_200x200.png";
+
 function useNewBookingCount() {
-  // Badge count is driven by a custom event fired from AdminBookingsPage
-  // once booking data loads. This keeps the Layout decoupled from data fetching.
   const [badgeCount, setBadgeCount] = useState<number>(0);
 
   useEffect(() => {
@@ -17,15 +17,7 @@ function useNewBookingCount() {
       window.removeEventListener("cleanio:new-booking-count", handler);
   }, []);
 
-  // Also persist badge count so it survives navigating away and back to admin.
-  // We store it separately so Layout always knows about unseen bookings.
   return { badgeCount };
-}
-
-function handleLogoError(e: React.SyntheticEvent<HTMLImageElement>) {
-  const target = e.currentTarget;
-  target.onerror = null;
-  target.src = "/assets/generated/bike-logo-box.dim_200x200.png";
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -62,10 +54,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             data-ocid="nav.home.link"
           >
             <img
-              src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
-              alt="Cleanio Bike Icon"
-              className="h-10 w-auto object-contain bg-white rounded-md p-0.5"
-              onError={handleLogoError}
+              src={LOGO_SRC}
+              alt="Cleanio Icon"
+              className="h-10 w-10 object-contain bg-white rounded-md p-0.5"
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -204,7 +195,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform duration-200 hover:scale-110 active:scale-95"
         style={{ backgroundColor: "#25D366" }}
       >
-        {/* WhatsApp SVG icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -223,10 +213,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <img
-                src="/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png"
-                alt="Cleanio Bike Icon"
-                className="h-7 w-auto object-contain bg-white rounded-md p-0.5"
-                onError={handleLogoError}
+                src={LOGO_SRC}
+                alt="Cleanio Icon"
+                className="h-7 w-7 object-contain bg-white rounded-md p-0.5"
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>
