@@ -2,8 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, Shield, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const LOGO_SRC =
-  "/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png";
+const LOGO_SRC = "/assets/generated/cleanio-icon.dim_200x200.png";
 
 function useNewBookingCount() {
   const [badgeCount, setBadgeCount] = useState<number>(0);
@@ -58,10 +57,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               src={LOGO_SRC}
               alt="Cleanio Icon"
               className="h-10 w-10 object-contain bg-white rounded-md p-0.5"
-              onError={(e) => {
-                const target = e.currentTarget;
-                target.style.display = "none";
-              }}
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -221,10 +216,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 src={LOGO_SRC}
                 alt="Cleanio Icon"
                 className="h-7 w-7 object-contain bg-white rounded-md p-0.5"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  target.style.display = "none";
-                }}
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>
