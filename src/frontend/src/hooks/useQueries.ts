@@ -37,7 +37,6 @@ export function useGetBooking(id: string) {
 }
 
 export interface CreateBookingParams {
-  id: string;
   customerName: string;
   phoneNumber: string;
   address: string;
@@ -48,6 +47,10 @@ export interface CreateBookingParams {
   cleaningSubOption: CleaningSubOption | null;
 }
 
+function generateBookingId(): string {
+  return `BK-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+}
+
 export function useCreateBooking() {
   const { actor } = useActor();
   // Keep a ref so the latest actor is always accessible inside the mutation callback
@@ -56,7 +59,7 @@ export function useCreateBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: CreateBookingParams) => {
+    mutationFn: async (params: CreateBookingParams): Promise<string> => {
       // If actor isn't ready yet, poll up to 10 seconds before giving up
       let resolvedActor = actorRef.current;
       if (!resolvedActor) {
@@ -80,12 +83,14 @@ export function useCreateBooking() {
         );
       }
 
-      // Retry the actual createBooking call up to 2 times on transient errors
+      // Generate a fresh booking ID per attempt so retries don't collide
+      // with a previously-trapped (partial) write on the backend.
       let lastError: unknown;
       for (let attempt = 0; attempt < 3; attempt++) {
+        const bookingId = generateBookingId();
         try {
           await resolvedActor.createBooking(
-            params.id,
+            bookingId,
             params.customerName,
             params.phoneNumber,
             params.address,
@@ -95,23 +100,23 @@ export function useCreateBooking() {
             params.repairDetails,
             params.cleaningSubOption,
           );
-          return params.id;
+          // Return the ID that was successfully stored
+          return bookingId;
         } catch (err) {
           lastError = err;
           console.error(
             `[useCreateBooking] attempt ${attempt + 1} failed:`,
             err,
           );
-          // Only retry on network/transient errors, not validation errors
+          // Don't retry validation errors
           const message = err instanceof Error ? err.message : String(err);
           const isValidationError =
-            message.includes("already exists") ||
             message.includes("required") ||
             message.includes("Cleaning sub-option");
           if (isValidationError) break;
           // Wait before retry
           if (attempt < 2) {
-            await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+            await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
           }
         }
       }

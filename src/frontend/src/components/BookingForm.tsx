@@ -122,7 +122,6 @@ export default function BookingForm({
     setErrors({});
     setSubmitError(null);
 
-    const bookingId = `BK-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
     const evTag = isElectric ? " [Electric Vehicle]" : "";
     const fullAddress = `${address} | Slot: ${timeSlot}${evTag}`;
 
@@ -135,8 +134,9 @@ export default function BookingForm({
     }
 
     try {
-      await createBooking.mutateAsync({
-        id: bookingId,
+      // The mutation generates a fresh booking ID per attempt internally
+      // and returns the successfully stored ID.
+      const confirmedId = await createBooking.mutateAsync({
         customerName: name.trim(),
         phoneNumber: phone.trim(),
         address: fullAddress,
@@ -150,7 +150,7 @@ export default function BookingForm({
       navigate({
         to: "/confirmation",
         search: {
-          bookingId,
+          bookingId: confirmedId,
           name: name.trim(),
           service: serviceType,
           slot: timeSlot,

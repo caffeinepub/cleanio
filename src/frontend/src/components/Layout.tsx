@@ -62,8 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <img
               src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
               alt="Cleanio logo"
-              className="h-7 w-7 rounded object-contain bg-white"
-              style={{ maxHeight: "28px", maxWidth: "28px" }}
+              className="h-8 w-8 rounded-md object-contain bg-white p-0.5 flex-shrink-0"
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -224,8 +223,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <img
                 src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
                 alt="Cleanio logo"
-                className="h-5 w-5 rounded object-contain bg-white"
-                style={{ maxHeight: "20px", maxWidth: "20px" }}
+                className="h-6 w-6 rounded object-contain bg-white p-0.5 flex-shrink-0"
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>

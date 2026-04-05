@@ -1,9 +1,6 @@
 import Map "mo:core/Map";
 import Text "mo:core/Text";
-import Iter "mo:core/Iter";
 import Runtime "mo:core/Runtime";
-
-
 
 actor {
   type VehicleType = { #scooter; #motorcycle; #electric };
@@ -28,8 +25,8 @@ actor {
 
   stable var bookings = Map.empty<Text, Booking>();
 
-  // Create a new booking with error checks
-  public shared ({ caller }) func createBooking(
+  // Create a new booking
+  public shared func createBooking(
     id : Text,
     customerName : Text,
     phoneNumber : Text,
@@ -68,17 +65,17 @@ actor {
   };
 
   // Query all bookings
-  public query ({ caller }) func getBookings() : async [Booking] {
+  public query func getBookings() : async [Booking] {
     bookings.values().toArray();
   };
 
   // Query single booking by ID
-  public query ({ caller }) func getBooking(id : Text) : async ?Booking {
+  public query func getBooking(id : Text) : async ?Booking {
     bookings.get(id);
   };
 
   // Update the status of a booking
-  public shared ({ caller }) func updateBookingStatus(id : Text, newStatus : Status) : async () {
+  public shared func updateBookingStatus(id : Text, newStatus : Status) : async () {
     switch (bookings.get(id)) {
       case (null) { Runtime.trap("Booking not found") };
       case (?booking) {
@@ -89,7 +86,7 @@ actor {
   };
 
   // Assign a mechanic to a booking
-  public shared ({ caller }) func assignMechanic(id : Text, mechanicName : Text) : async () {
+  public shared func assignMechanic(id : Text, mechanicName : Text) : async () {
     switch (bookings.get(id)) {
       case (null) { Runtime.trap("Booking not found") };
       case (?booking) {
