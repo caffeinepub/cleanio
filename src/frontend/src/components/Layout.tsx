@@ -1,8 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, Shield, X } from "lucide-react";
+import { Menu, MessageCircle, Shield, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const LOGO_SRC = "/assets/generated/cleanio-icon.dim_200x200.png";
 
 function useNewBookingCount() {
   const [badgeCount, setBadgeCount] = useState<number>(0);
@@ -26,7 +24,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { badgeCount } = useNewBookingCount();
 
   const WHATSAPP_NUMBER = "919637113065";
-  const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+  const WHATSAPP_MESSAGE = encodeURIComponent(
+    `Hello Cleanio! 👋\n\nI'd like to know more about your services.\n\nPlease select an option:\n1️⃣ Full Service\n2️⃣ Repair\n3️⃣ Cleaning\n4️⃣ Premium Plans\n5️⃣ Track my Booking – visit: ${typeof window !== "undefined" ? window.location.origin : "https://cleanio.icp0.io"}/track-booking\n6️⃣ Other Query`,
+  );
+  const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
   const navLinks = [
     { label: "Home", path: "/" },
@@ -54,9 +55,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             data-ocid="nav.home.link"
           >
             <img
-              src={LOGO_SRC}
-              alt="Cleanio Icon"
-              className="h-10 w-10 object-contain bg-white rounded-md p-0.5"
+              src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
+              alt="Cleanio logo"
+              className="h-10 w-10 rounded-md object-contain bg-white"
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -213,9 +214,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <img
-                src={LOGO_SRC}
-                alt="Cleanio Icon"
-                className="h-7 w-7 object-contain bg-white rounded-md p-0.5"
+                src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
+                alt="Cleanio logo"
+                className="h-8 w-8 rounded-md object-contain bg-white"
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>

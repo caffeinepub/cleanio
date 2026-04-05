@@ -2,7 +2,6 @@ declare module "qrcode" {
   interface QRCodeOptions {
     width?: number;
     margin?: number;
-    errorCorrectionLevel?: "L" | "M" | "Q" | "H";
     color?: {
       dark?: string;
       light?: string;
@@ -17,6 +16,11 @@ declare module "qrcode" {
 
   function toDataURL(text: string, options?: QRCodeOptions): Promise<string>;
 
+  const QRCode: {
+    toCanvas: typeof toCanvas;
+    toDataURL: typeof toDataURL;
+  };
+
+  export default QRCode;
   export { toCanvas, toDataURL };
-  export default { toCanvas, toDataURL };
 }

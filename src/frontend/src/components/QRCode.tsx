@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 interface QRCodeCanvasProps {
   value: string;
   size?: number;
@@ -9,33 +7,12 @@ interface QRCodeCanvasProps {
   style?: React.CSSProperties;
 }
 
-// Load qrcodejs from CDN and render QR code onto a canvas
-function loadQRLib(): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const scriptId = "qrcodejs-cdn";
-    const existing = document.getElementById(scriptId);
-    const win = window as Window & { QRCode?: unknown };
-
-    if (existing) {
-      if (win.QRCode) {
-        resolve(win.QRCode);
-      } else {
-        existing.addEventListener("load", () => resolve(win.QRCode));
-        existing.addEventListener("error", reject);
-      }
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = scriptId;
-    script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-    script.onload = () => resolve(win.QRCode);
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
-
+/**
+ * QR code rendered via qrserver.com API.
+ * The canvas ref trick in AdminBookingsPage looks for a <canvas> inside the
+ * wrapper div for the download — we simulate that by drawing the img onto a
+ * hidden canvas so the existing download logic still works.
+ */
 export function QRCodeCanvas({
   value,
   size = 200,
@@ -44,72 +21,41 @@ export function QRCodeCanvas({
   className,
   style,
 }: QRCodeCanvasProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!value || !containerRef.current) return;
-
-    const container = containerRef.current;
-    // Clear previous QR
-    container.innerHTML = "";
-
-    loadQRLib()
-      .then((QRLib) => {
-        if (!container) return;
-        container.innerHTML = "";
-        // biome-ignore lint/suspicious/noExplicitAny: external CDN library
-        new (QRLib as any)(container, {
-          text: value,
-          width: size,
-          height: size,
-          colorDark: fgColor,
-          colorLight: bgColor,
-          correctLevel: 1, // M
-        });
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("QR Code error:", err);
-        setError("QR generation failed");
-      });
-  }, [value, size, bgColor, fgColor]);
-
-  if (error) {
-    return (
-      <div
-        className={className}
-        style={{
-          width: size,
-          height: size,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: bgColor,
-          border: "1px solid #ccc",
-          ...style,
-        }}
-      >
-        <span
-          style={{
-            color: fgColor,
-            fontSize: 12,
-            textAlign: "center",
-            padding: 8,
-          }}
-        >
-          QR Error
-        </span>
-      </div>
-    );
-  }
+  // Build qrserver.com URL
+  const color = fgColor.replace("#", "");
+  const bg = bgColor.replace("#", "");
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(value)}&color=${color}&bgcolor=${bg}&margin=10`;
 
   return (
     <div
-      ref={containerRef}
       className={className}
-      style={{ width: size, height: size, lineHeight: 0, ...style }}
-      aria-label="QR Code"
-    />
+      style={{ width: size, height: size, position: "relative", ...style }}
+    >
+      {/* Hidden canvas used by the download handler in AdminBookingsPage */}
+      <canvas
+        id="qr-hidden-canvas"
+        width={size}
+        height={size}
+        style={{ display: "none" }}
+      />
+      <img
+        src={qrUrl}
+        alt="QR Code"
+        width={size}
+        height={size}
+        style={{ display: "block", borderRadius: 4 }}
+        onLoad={(e) => {
+          // Paint the loaded image onto the hidden canvas so download works
+          const canvas = document.getElementById(
+            "qr-hidden-canvas",
+          ) as HTMLCanvasElement | null;
+          if (!canvas) return;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          ctx.drawImage(e.currentTarget, 0, 0, size, size);
+        }}
+        crossOrigin="anonymous"
+      />
+    </div>
   );
 }
