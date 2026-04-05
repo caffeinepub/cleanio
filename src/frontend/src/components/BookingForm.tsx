@@ -91,12 +91,8 @@ export default function BookingForm({
 
   const isElectric = vehicleCategory === "electric";
 
-  // Updated pricing: electric = ₹999 flat; under 200cc = ₹1599; above 200cc = ₹1999
-  const price = isElectric
-    ? 999
-    : capacity === Capacity.upTo200cc
-      ? 1599
-      : 1999;
+  // Updated pricing: electric = ₹999 flat; under 200cc = ₹899; above 200cc = ₹1199
+  const price = isElectric ? 999 : capacity === Capacity.upTo200cc ? 899 : 1199;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -218,7 +214,7 @@ export default function BookingForm({
                   </div>
                 </div>
                 <span className="text-brand-orange font-black text-lg">
-                  ₹1599
+                  ₹899
                 </span>
               </label>
 
@@ -242,7 +238,7 @@ export default function BookingForm({
                   </div>
                 </div>
                 <span className="text-brand-orange font-black text-lg">
-                  ₹1999
+                  ₹1199
                 </span>
               </label>
             </RadioGroup>
