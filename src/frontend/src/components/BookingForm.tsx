@@ -91,8 +91,12 @@ export default function BookingForm({
 
   const isElectric = vehicleCategory === "electric";
 
-  // Price: electric full service = ₹999 flat; others use capacity
-  const price = isElectric ? 999 : capacity === Capacity.upTo200cc ? 899 : 1199;
+  // Updated pricing: electric = ₹999 flat; under 200cc = ₹1599; above 200cc = ₹1999
+  const price = isElectric
+    ? 999
+    : capacity === Capacity.upTo200cc
+      ? 1599
+      : 1999;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -127,6 +131,12 @@ export default function BookingForm({
     const fullAddress = `${address} | Slot: ${timeSlot}${evTag}`;
 
     const subOption = buildCleaningSubOption();
+
+    // For cleaning, ensure subOption is provided
+    if (serviceType === ServiceType.cleaning && !subOption) {
+      setSubmitError("Please select a cleaning option before booking.");
+      return;
+    }
 
     try {
       await createBooking.mutateAsync({
@@ -208,7 +218,7 @@ export default function BookingForm({
                   </div>
                 </div>
                 <span className="text-brand-orange font-black text-lg">
-                  ₹899
+                  ₹1599
                 </span>
               </label>
 
@@ -232,7 +242,7 @@ export default function BookingForm({
                   </div>
                 </div>
                 <span className="text-brand-orange font-black text-lg">
-                  ₹1199
+                  ₹1999
                 </span>
               </label>
             </RadioGroup>
