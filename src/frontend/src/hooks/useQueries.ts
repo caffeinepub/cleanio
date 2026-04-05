@@ -57,11 +57,11 @@ export function useCreateBooking() {
 
   return useMutation({
     mutationFn: async (params: CreateBookingParams) => {
-      // If actor isn't ready yet, poll up to 5 seconds before giving up
+      // If actor isn't ready yet, poll up to 10 seconds before giving up
       let resolvedActor = actorRef.current;
       if (!resolvedActor) {
         resolvedActor = await new Promise<typeof actor>((resolve) => {
-          const deadline = Date.now() + 5000;
+          const deadline = Date.now() + 10000;
           const interval = setInterval(() => {
             if (actorRef.current) {
               clearInterval(interval);
@@ -80,25 +80,45 @@ export function useCreateBooking() {
         );
       }
 
-      try {
-        await resolvedActor.createBooking(
-          params.id,
-          params.customerName,
-          params.phoneNumber,
-          params.address,
-          params.vehicleType,
-          params.capacity,
-          params.serviceType,
-          params.repairDetails,
-          params.cleaningSubOption,
-        );
-      } catch (err) {
-        console.error("[useCreateBooking] createBooking call failed:", err);
-        // Re-throw with a friendlier message that still includes root cause
-        const message = err instanceof Error ? err.message : String(err);
-        throw new Error(`Booking failed: ${message}`);
+      // Retry the actual createBooking call up to 2 times on transient errors
+      let lastError: unknown;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          await resolvedActor.createBooking(
+            params.id,
+            params.customerName,
+            params.phoneNumber,
+            params.address,
+            params.vehicleType,
+            params.capacity,
+            params.serviceType,
+            params.repairDetails,
+            params.cleaningSubOption,
+          );
+          return params.id;
+        } catch (err) {
+          lastError = err;
+          console.error(
+            `[useCreateBooking] attempt ${attempt + 1} failed:`,
+            err,
+          );
+          // Only retry on network/transient errors, not validation errors
+          const message = err instanceof Error ? err.message : String(err);
+          const isValidationError =
+            message.includes("already exists") ||
+            message.includes("required") ||
+            message.includes("Cleaning sub-option");
+          if (isValidationError) break;
+          // Wait before retry
+          if (attempt < 2) {
+            await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+          }
+        }
       }
-      return params.id;
+
+      const message =
+        lastError instanceof Error ? lastError.message : String(lastError);
+      throw new Error(`Booking failed. Please try again. (${message})`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookings"] });

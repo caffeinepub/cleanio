@@ -1,15 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
-  ArrowRight,
   Calendar,
+  Check,
   CheckCircle,
+  Copy,
+  History,
   Home,
   Loader2,
   Phone,
+  Search,
   UserCheck,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useGetBooking } from "../hooks/useQueries";
+
+const LS_KEY = "cleanio_booking_ids";
 
 const SERVICE_LABELS: Record<string, string> = {
   fullService: "Full Service",
@@ -39,11 +45,35 @@ export default function BookingConfirmationPage() {
   };
 
   const { data: booking, isLoading } = useGetBooking(bookingId);
+  const [copied, setCopied] = useState(false);
+
+  // Save booking ID to localStorage history on mount
+  useEffect(() => {
+    if (!bookingId) return;
+    try {
+      const existing: string[] = JSON.parse(
+        localStorage.getItem(LS_KEY) || "[]",
+      );
+      if (!existing.includes(bookingId)) {
+        existing.unshift(bookingId);
+        localStorage.setItem(LS_KEY, JSON.stringify(existing));
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [bookingId]);
 
   const cleaningLabel = getCleaningSubOptionLabel(booking ?? null);
   const serviceDisplay = cleaningLabel
     ? `Cleaning – ${cleaningLabel}`
     : SERVICE_LABELS[service] || service;
+
+  function handleCopy() {
+    navigator.clipboard.writeText(bookingId).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-lg">
@@ -56,20 +86,50 @@ export default function BookingConfirmationPage() {
         <h1 className="font-display font-black text-3xl text-foreground mb-2">
           Booking Confirmed!
         </h1>
-        <p className="text-muted-foreground mb-8">
+        <p className="text-muted-foreground mb-6">
           Your service has been booked successfully. Our technician will be at
           your doorstep on time.
         </p>
 
-        {/* Booking Details */}
-        <div className="bg-charcoal-light border border-border rounded-2xl p-5 text-left space-y-3 mb-6">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-sm">Booking ID</span>
-            <span className="text-brand-orange font-mono font-bold text-sm">
+        {/* Prominent Booking ID Box */}
+        <div
+          data-ocid="booking.id.panel"
+          className="bg-brand-orange/10 border-2 border-brand-orange/40 rounded-2xl px-6 py-5 mb-6 text-center"
+        >
+          <p className="text-xs font-semibold uppercase tracking-widest text-brand-orange mb-2">
+            Your Booking ID
+          </p>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <span className="text-brand-orange font-mono font-black text-2xl tracking-wider">
               {bookingId}
             </span>
+            <button
+              data-ocid="booking.id.button"
+              type="button"
+              onClick={handleCopy}
+              aria-label={copied ? "Copied" : "Copy Booking ID"}
+              className="flex items-center gap-1.5 bg-brand-orange/20 hover:bg-brand-orange/30 border border-brand-orange/40 text-brand-orange rounded-lg px-3 py-1.5 text-xs font-semibold transition-all"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
           </div>
-          <div className="h-px bg-border" />
+          <p className="text-xs text-muted-foreground">
+            Save this ID to track your booking anytime
+          </p>
+        </div>
+
+        {/* Booking Details */}
+        <div className="bg-charcoal-light border border-border rounded-2xl p-5 text-left space-y-3 mb-6">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm">Customer</span>
             <span className="text-foreground font-medium text-sm">{name}</span>
@@ -139,19 +199,34 @@ export default function BookingConfirmationPage() {
         {/* Actions */}
         <div className="flex flex-col gap-3">
           <Button
-            onClick={() => navigate({ to: "/" })}
+            data-ocid="booking.track.button"
+            onClick={() =>
+              navigate({
+                to: "/track-booking",
+              })
+            }
             className="w-full bg-brand-orange hover:bg-brand-orange-light text-charcoal font-bold py-3 rounded-xl shadow-orange-glow transition-all"
+          >
+            <Search className="w-4 h-4 mr-2" />
+            Track My Booking
+          </Button>
+          <Button
+            data-ocid="booking.history.button"
+            onClick={() => navigate({ to: "/my-bookings" })}
+            variant="outline"
+            className="w-full border-brand-orange/40 text-brand-orange hover:bg-brand-orange/10 hover:border-brand-orange rounded-xl transition-all"
+          >
+            <History className="w-4 h-4 mr-2" />
+            View All My Bookings
+          </Button>
+          <Button
+            data-ocid="booking.home.button"
+            onClick={() => navigate({ to: "/" })}
+            variant="outline"
+            className="w-full border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange rounded-xl transition-all"
           >
             <Home className="w-4 h-4 mr-2" />
             Back to Home
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate({ to: "/admin/bookings" })}
-            className="w-full border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange rounded-xl transition-all"
-          >
-            View All Bookings
-            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
       </div>

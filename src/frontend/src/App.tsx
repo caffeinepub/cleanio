@@ -13,7 +13,9 @@ import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import CleaningPage from "./pages/CleaningPage";
 import FullServicePage from "./pages/FullServicePage";
 import HomePage from "./pages/HomePage";
+import MyBookingsPage from "./pages/MyBookingsPage";
 import RepairPage from "./pages/RepairPage";
+import TrackBookingPage from "./pages/TrackBookingPage";
 
 // Root route with Layout
 const rootRoute = createRootRoute({
@@ -61,6 +63,18 @@ const confirmationRoute = createRoute({
   }),
 });
 
+const trackBookingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/track-booking",
+  component: TrackBookingPage,
+});
+
+const myBookingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/my-bookings",
+  component: MyBookingsPage,
+});
+
 const adminBookingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin/bookings",
@@ -88,6 +102,8 @@ const routeTree = rootRoute.addChildren([
   repairRoute,
   cleaningRoute,
   confirmationRoute,
+  trackBookingRoute,
+  myBookingsRoute,
   adminBookingsRoute,
   adminRoute,
 ]);

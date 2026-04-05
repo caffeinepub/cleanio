@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, MessageCircle, Shield, X } from "lucide-react";
+import { History, Menu, MessageCircle, Shield, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function useNewBookingCount() {
@@ -34,6 +34,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { label: "Full Service", path: "/full-service" },
     { label: "Repair", path: "/repair" },
     { label: "Cleaning", path: "/cleaning" },
+    {
+      label: "My Bookings",
+      path: "/my-bookings",
+      icon: <History className="w-3.5 h-3.5" />,
+    },
     { label: "Support", path: "/#support" },
   ];
 
@@ -57,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <img
               src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
               alt="Cleanio logo"
-              className="h-10 w-10 rounded-md object-contain bg-white"
+              className="h-5 w-5 rounded object-contain bg-white"
             />
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
@@ -82,12 +87,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   key={link.path}
                   to={link.path}
                   data-ocid={`nav.${link.label.toLowerCase().replace(" ", "_")}.link`}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive(link.path)
                       ? "bg-brand-orange text-charcoal"
                       : "text-muted-foreground hover:text-white hover:bg-charcoal-light"
                   }`}
                 >
+                  {"icon" in link && link.icon}
                   {link.label}
                 </Link>
               ),
@@ -148,12 +154,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     key={link.path}
                     to={link.path}
                     onClick={() => setMenuOpen(false)}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive(link.path)
                         ? "bg-brand-orange text-charcoal"
                         : "text-muted-foreground hover:text-white hover:bg-charcoal-light"
                     }`}
                   >
+                    {"icon" in link && link.icon}
                     {link.label}
                   </Link>
                 ),
@@ -216,7 +223,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <img
                 src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
                 alt="Cleanio logo"
-                className="h-8 w-8 rounded-md object-contain bg-white"
+                className="h-5 w-5 rounded object-contain bg-white"
               />
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>
