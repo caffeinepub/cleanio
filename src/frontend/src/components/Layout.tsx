@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { History, Menu, MessageCircle, Shield, X } from "lucide-react";
+import { History, Menu, Shield, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function useNewBookingCount() {
@@ -17,6 +17,9 @@ function useNewBookingCount() {
 
   return { badgeCount };
 }
+
+const LOGO_SRC =
+  "/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -59,12 +62,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 group"
             data-ocid="nav.home.link"
           >
-            <div className="flex-shrink-0 w-8 h-8 rounded-md overflow-hidden bg-white flex items-center justify-center">
+            {/* Logo box: fixed 36x36, white background, rounded, no overflow clipping */}
+            <div
+              className="flex-shrink-0 rounded-md bg-white flex items-center justify-center"
+              style={{ width: 36, height: 36, padding: 3 }}
+            >
               <img
-                src="/assets/generated/cleanio-nav-icon.dim_200x200.png"
+                src={LOGO_SRC}
                 alt="Cleanio logo"
-                className="w-7 h-7 object-contain"
-                style={{ display: "block" }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  display: "block",
+                }}
               />
             </div>
             <span className="text-xl font-bold tracking-tight font-poppins">
@@ -223,12 +234,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <div className="flex-shrink-0 w-6 h-6 rounded overflow-hidden bg-white flex items-center justify-center">
+              <div
+                className="flex-shrink-0 rounded bg-white flex items-center justify-center"
+                style={{ width: 28, height: 28, padding: 2 }}
+              >
                 <img
-                  src="/assets/generated/cleanio-nav-icon.dim_200x200.png"
+                  src={LOGO_SRC}
                   alt="Cleanio logo"
-                  className="w-5 h-5 object-contain"
-                  style={{ display: "block" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
                 />
               </div>
               <span className="font-bold font-poppins">
