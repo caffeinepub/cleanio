@@ -59,11 +59,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 group"
             data-ocid="nav.home.link"
           >
-            <img
-              src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
-              alt="Cleanio logo"
-              className="h-8 w-8 rounded-md object-contain bg-white p-0.5 flex-shrink-0"
-            />
+            <div className="flex-shrink-0 w-8 h-8 rounded-md overflow-hidden bg-white flex items-center justify-center">
+              <img
+                src="/assets/generated/cleanio-nav-icon.dim_200x200.png"
+                alt="Cleanio logo"
+                className="w-7 h-7 object-contain"
+                style={{ display: "block" }}
+              />
+            </div>
             <span className="text-xl font-bold tracking-tight font-poppins">
               <span className="text-brand-orange">Clean</span>
               <span className="text-white">io</span>
@@ -220,11 +223,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <img
-                src="/assets/generated/cleanio-logo-v26.dim_200x200.png"
-                alt="Cleanio logo"
-                className="h-6 w-6 rounded object-contain bg-white p-0.5 flex-shrink-0"
-              />
+              <div className="flex-shrink-0 w-6 h-6 rounded overflow-hidden bg-white flex items-center justify-center">
+                <img
+                  src="/assets/generated/cleanio-nav-icon.dim_200x200.png"
+                  alt="Cleanio logo"
+                  className="w-5 h-5 object-contain"
+                  style={{ display: "block" }}
+                />
+              </div>
               <span className="font-bold font-poppins">
                 <span className="text-brand-orange">Clean</span>
                 <span className="text-white">io</span>
