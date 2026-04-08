@@ -19,7 +19,8 @@ function useNewBookingCount() {
 }
 
 // Logo served from public/assets/logo.png — the original uploaded orange scooter
-const LOGO_SRC = "/assets/logo.png";
+// ?v=2 busts any stale browser cache from previously corrupted copies
+const LOGO_SRC = "/assets/logo.png?v=2";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);

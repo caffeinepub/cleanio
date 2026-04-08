@@ -19,8 +19,10 @@ module {
     serviceType : OldServiceType;
     cleaningSubOption : ?OldCleaningSubOption;
     repairDetails : ?Text;
+    timeSlot : ?Text;
     status : OldStatus;
     mechanicName : ?Text;
+    createdAt : Int;
   };
 
   // New types (current version — adds timeSlot and createdAt)
@@ -67,10 +69,10 @@ module {
           serviceType = b.serviceType;
           cleaningSubOption = b.cleaningSubOption;
           repairDetails = b.repairDetails;
-          timeSlot = null;
+          timeSlot = b.timeSlot;
           status = b.status;
           mechanicName = b.mechanicName;
-          createdAt = 0;
+          createdAt = b.createdAt;
         }
       }
     );

@@ -36,6 +36,7 @@ type OldBooking__221110599 =
     address : Text;
     capacity : OldCapacity__734712760;
     cleaningSubOption : ?OldCleaningSubOption__873398896;
+    createdAt : Int;
     customerName : Text;
     id : Text;
     mechanicName : ?Text;
@@ -43,6 +44,7 @@ type OldBooking__221110599 =
     repairDetails : ?Text;
     serviceType : OldServiceType__1063359608;
     status : OldStatus__155413022;
+    timeSlot : ?Text;
     vehicleType : OldVehicleType__389435927
   };
 type OldCapacity__734712760 = {#above200cc; #upTo200cc};
