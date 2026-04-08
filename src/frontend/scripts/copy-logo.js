@@ -1,6 +1,4 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const src = path.join(__dirname, '../public/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png');
-const dest = path.join(__dirname, '../public/assets/logo.png');
-fs.copyFileSync(src, dest);
-console.log('Logo copied successfully');
+// Logo copy script disabled — the source file is corrupted at the byte level.
+// The app uses /assets/generated/cleanio-logo.dim_200x200.png which is a clean, valid PNG.
+// This script intentionally does nothing to prevent overwriting the good logo.
+console.log('copy-logo: skipped (using generated clean logo instead)');

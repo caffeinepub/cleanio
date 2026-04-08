@@ -2,9 +2,9 @@ import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   type VehicleType = { #scooter; #motorcycle; #electric };
   type Capacity = { #upTo200cc; #above200cc };

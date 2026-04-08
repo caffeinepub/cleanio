@@ -14,6 +14,7 @@ import CleaningPage from "./pages/CleaningPage";
 import FullServicePage from "./pages/FullServicePage";
 import HomePage from "./pages/HomePage";
 import MyBookingsPage from "./pages/MyBookingsPage";
+import PremiumPlansPage from "./pages/PremiumPlansPage";
 import RepairPage from "./pages/RepairPage";
 import TrackBookingPage from "./pages/TrackBookingPage";
 
@@ -75,6 +76,12 @@ const myBookingsRoute = createRoute({
   component: MyBookingsPage,
 });
 
+const premiumPlansRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/premium-plans",
+  component: PremiumPlansPage,
+});
+
 const adminBookingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin/bookings",
@@ -104,6 +111,7 @@ const routeTree = rootRoute.addChildren([
   confirmationRoute,
   trackBookingRoute,
   myBookingsRoute,
+  premiumPlansRoute,
   adminBookingsRoute,
   adminRoute,
 ]);

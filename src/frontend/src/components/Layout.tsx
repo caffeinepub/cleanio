@@ -18,9 +18,8 @@ function useNewBookingCount() {
   return { badgeCount };
 }
 
-// Logo served from public/assets/logo.png — the original uploaded orange scooter
-// ?v=2 busts any stale browser cache from previously corrupted copies
-const LOGO_SRC = "/assets/logo.png?v=2";
+// Fresh generated logo — orange scooter with blue location pin on white background
+const LOGO_SRC = "/assets/generated/cleanio-logo.dim_200x200.png?v=2";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);

@@ -17,8 +17,12 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Bell,
+  CheckCircle2,
   ClipboardList,
+  CreditCard,
   Download,
+  Eye,
+  EyeOff,
   Loader2,
   LogOut,
   Phone,
@@ -37,6 +41,7 @@ import {
 } from "../hooks/useQueries";
 
 const LS_NEW_COUNT_KEY = "cleanio_last_seen_booking_count";
+const LS_STRIPE_KEY = "stripeSecretKey";
 
 const SERVICE_LABELS: Record<string, string> = {
   fullService: "Full Service",
@@ -373,6 +378,229 @@ function QRCodeModal() {
   );
 }
 
+// ---------- Setup Payments Modal ----------
+function readStripeKey(): string {
+  try {
+    return localStorage.getItem(LS_STRIPE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function SetupPaymentsModal() {
+  const [open, setOpen] = useState(false);
+  const [keyInput, setKeyInput] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [existingKey, setExistingKey] = useState<string>("");
+  const [changing, setChanging] = useState(false);
+
+  // Refresh existing key when modal opens
+  const handleOpenChange = (val: boolean) => {
+    if (val) {
+      const stored = readStripeKey();
+      setExistingKey(stored);
+      setKeyInput("");
+      setSaved(false);
+      setChanging(false);
+      setShowKey(false);
+    }
+    setOpen(val);
+  };
+
+  const handleSave = () => {
+    if (!keyInput.trim()) return;
+    try {
+      localStorage.setItem(LS_STRIPE_KEY, keyInput.trim());
+      setExistingKey(keyInput.trim());
+      setKeyInput("");
+      setSaved(true);
+      setChanging(false);
+      setTimeout(() => setSaved(false), 4000);
+    } catch {
+      // ignore
+    }
+  };
+
+  const hasKey = existingKey.length > 0;
+  const maskedKey = hasKey ? `••••••••${existingKey.slice(-4)}` : "";
+
+  const isConfigured = readStripeKey().length > 0;
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button
+          size="sm"
+          data-ocid="admin.setup_payments.open_modal_button"
+          className="relative bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all shadow-md"
+        >
+          <CreditCard className="w-4 h-4 mr-2" />
+          Setup Payments
+          {isConfigured && (
+            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center shadow">
+              <CheckCircle2 className="w-3 h-3 text-white" />
+            </span>
+          )}
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent
+        data-ocid="admin.setup_payments.dialog"
+        className="bg-card border-border max-w-md w-full"
+      >
+        <DialogHeader>
+          <DialogTitle className="text-foreground font-display text-lg flex items-center gap-2">
+            <CreditCard className="w-5 h-5 text-orange-400" />
+            Setup Stripe Payments
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-5 py-2">
+          {/* Success message */}
+          {saved && (
+            <div
+              data-ocid="admin.setup_payments.success_state"
+              className="flex items-start gap-3 bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3"
+            >
+              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-green-400 font-medium">
+                Payments activated! Customers can now pay online.
+              </p>
+            </div>
+          )}
+
+          {/* Existing key view */}
+          {hasKey && !changing ? (
+            <div className="space-y-3">
+              <div className="bg-charcoal-light border border-border rounded-xl p-4 space-y-2">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                  Current Stripe Key
+                </p>
+                <p className="font-mono text-sm text-foreground">{maskedKey}</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+                  <span className="text-xs text-green-400 font-medium">
+                    Payments are active
+                  </span>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setChanging(true)}
+                data-ocid="admin.setup_payments.change_key_button"
+                className="border-border text-muted-foreground hover:text-foreground hover:border-brand-orange/50 transition-all w-full"
+              >
+                Change Key
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Input */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="stripe-key"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Stripe Secret Key
+                </label>
+                <div className="relative">
+                  <Input
+                    id="stripe-key"
+                    type={showKey ? "text" : "password"}
+                    value={keyInput}
+                    onChange={(e) => setKeyInput(e.target.value)}
+                    placeholder="sk_live_..."
+                    data-ocid="admin.setup_payments.key_input"
+                    className="bg-charcoal-light border-border text-foreground placeholder:text-muted-foreground focus:border-orange-400 pr-10"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleSave();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKey((v) => !v)}
+                    aria-label={showKey ? "Hide key" : "Show key"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showKey ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Helper note */}
+              <div className="bg-charcoal-light border border-border rounded-xl px-4 py-3 text-xs text-muted-foreground space-y-1">
+                <p className="font-medium text-foreground">
+                  How to get your key:
+                </p>
+                <p>
+                  Go to{" "}
+                  <a
+                    href="https://stripe.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-orange-400 hover:underline"
+                  >
+                    stripe.com
+                  </a>{" "}
+                  → Developers → API Keys → copy your{" "}
+                  <span className="font-mono text-foreground">Secret key</span>
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-1">
+                <Button
+                  onClick={handleSave}
+                  disabled={!keyInput.trim()}
+                  data-ocid="admin.setup_payments.save_button"
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all"
+                >
+                  Save & Activate
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (changing) {
+                      setChanging(false);
+                    } else {
+                      setOpen(false);
+                    }
+                  }}
+                  data-ocid="admin.setup_payments.cancel_button"
+                  className="border-border text-muted-foreground hover:text-foreground hover:bg-charcoal-light transition-all"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Close button when key exists and not changing */}
+          {hasKey && !changing && (
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              data-ocid="admin.setup_payments.close_button"
+              className="w-full border-border text-muted-foreground hover:text-foreground hover:bg-charcoal-light transition-all"
+            >
+              Close
+            </Button>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ---------- Main Page ----------
 export default function AdminBookingsPage() {
   const { data: bookings, isLoading, refetch, isFetching } = useGetBookings();
@@ -455,6 +683,7 @@ export default function AdminBookingsPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          <SetupPaymentsModal />
           <QRCodeModal />
           <Button
             variant="outline"
