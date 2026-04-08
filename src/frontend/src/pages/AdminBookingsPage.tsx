@@ -36,23 +36,12 @@ import {
   useUpdateBookingStatus,
 } from "../hooks/useQueries";
 
-const LS_KEY = "cleanio_last_seen_booking_count";
+const LS_NEW_COUNT_KEY = "cleanio_last_seen_booking_count";
 
 const SERVICE_LABELS: Record<string, string> = {
   fullService: "Full Service",
   repair: "Repair",
   cleaning: "Cleaning",
-};
-
-const VEHICLE_LABELS: Record<string, string> = {
-  scooter: "🛵 Scooter",
-  motorcycle: "🏍️ Motorcycle",
-  electric: "⚡ Electric",
-};
-
-const CAPACITY_LABELS: Record<string, string> = {
-  upTo200cc: "Upto 200cc",
-  above200cc: "Above 200cc",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -61,17 +50,16 @@ const STATUS_COLORS: Record<string, string> = {
   completed: "bg-green-500/10 text-green-400 border-green-500/20",
 };
 
-function getCleaningSubOptionLabel(booking: Booking): string | null {
+function getCleaningLabel(booking: Booking): string | null {
   if (!booking.cleaningSubOption) return null;
-  if (booking.cleaningSubOption.__kind__ === "colourFoamWashing") {
+  if (booking.cleaningSubOption.__kind__ === "colourFoamWashing")
     return "Colour Foam Washing ₹199";
-  }
-  if (booking.cleaningSubOption.__kind__ === "normalFoamWashing") {
+  if (booking.cleaningSubOption.__kind__ === "normalFoamWashing")
     return "Normal Foam Washing ₹149";
-  }
   return null;
 }
 
+// ---------- Booking Card ----------
 function BookingCard({ booking }: { booking: Booking }) {
   const updateStatus = useUpdateBookingStatus();
   const assignMechanic = useAssignMechanic();
@@ -101,22 +89,22 @@ function BookingCard({ booking }: { booking: Booking }) {
       setMechanicSaved(true);
       setTimeout(() => setMechanicSaved(false), 2000);
     } catch {
-      // error handled silently
+      // silent
     }
   };
 
-  const cleaningLabel = getCleaningSubOptionLabel(booking);
+  const cleaningLabel = getCleaningLabel(booking);
   const isEV = booking.vehicleType === VehicleType.electric;
   const isPending = localStatus === Status.pending;
 
   return (
     <div className="bg-card border border-border rounded-2xl p-5 hover:border-brand-orange/50 transition-all duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div className="flex-1 space-y-3">
-          {/* Header Row */}
+        <div className="flex-1 space-y-3 min-w-0">
+          {/* Header */}
           <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="font-semibold text-foreground">
+            <div className="min-w-0">
+              <p className="font-semibold text-foreground truncate">
                 {booking.customerName}
               </p>
               <p className="text-sm text-muted-foreground">
@@ -124,15 +112,16 @@ function BookingCard({ booking }: { booking: Booking }) {
               </p>
             </div>
             <span
-              className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_COLORS[booking.status]}`}
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex-shrink-0 ${STATUS_COLORS[booking.status]}`}
             >
               {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
             </span>
           </div>
 
-          {/* Call Customer Button — prominent for pending bookings */}
+          {/* Call to Confirm Button */}
           <a
             href={`tel:${booking.phoneNumber}`}
+            data-ocid={`admin.call_button.${booking.id}`}
             className={`flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition-all ${
               isPending
                 ? "bg-green-500 hover:bg-green-400 text-white shadow-md"
@@ -148,7 +137,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             )}
           </a>
 
-          {/* Service Info */}
+          {/* Service Info Badges */}
           <div className="flex flex-wrap gap-2">
             <span className="bg-brand-orange/10 text-brand-orange border border-brand-orange/20 text-xs font-medium px-2.5 py-1 rounded-full">
               {SERVICE_LABELS[booking.serviceType] || booking.serviceType}
@@ -159,19 +148,32 @@ function BookingCard({ booking }: { booking: Booking }) {
                 ⚡ Electric Vehicle
               </span>
             ) : (
-              <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
-                {VEHICLE_LABELS[booking.vehicleType] || booking.vehicleType}
-              </span>
-            )}
-            {!isEV && (
-              <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
-                {CAPACITY_LABELS[booking.capacity] || booking.capacity}
-              </span>
+              <>
+                <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
+                  {booking.vehicleType === "scooter"
+                    ? "🛵 Scooter"
+                    : "🏍️ Motorcycle"}
+                </span>
+                <span className="bg-charcoal-light border border-border text-muted-foreground text-xs px-2.5 py-1 rounded-full">
+                  {booking.capacity === "upTo200cc"
+                    ? "Upto 200cc"
+                    : "Above 200cc"}
+                </span>
+              </>
             )}
           </div>
 
           {/* Address */}
-          <p className="text-xs text-muted-foreground">📍 {booking.address}</p>
+          <p className="text-xs text-muted-foreground truncate">
+            📍 {booking.address}
+          </p>
+
+          {/* Time Slot */}
+          {booking.timeSlot && (
+            <p className="text-xs text-muted-foreground">
+              🕐 {booking.timeSlot}
+            </p>
+          )}
 
           {/* Repair Details */}
           {booking.repairDetails && (
@@ -188,7 +190,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             <div className="flex items-center gap-1.5 mb-2">
               <UserCheck className="w-3.5 h-3.5 text-brand-orange" />
               <p className="text-xs text-muted-foreground font-medium">
-                Assigned Mechanic
+                Assign Mechanic
               </p>
             </div>
             <div className="flex gap-2">
@@ -322,7 +324,6 @@ function QRCodeModal() {
           </DialogTitle>
         </DialogHeader>
 
-        {/* QR Card */}
         <div className="flex flex-col items-center gap-5 py-2">
           <div
             ref={canvasRef}
@@ -337,7 +338,7 @@ function QRCodeModal() {
           </div>
 
           <div className="text-center space-y-1">
-            <p className="font-poppins text-xl font-bold">
+            <p className="font-display text-xl font-bold">
               <span className="text-brand-orange">Clean</span>
               <span className="text-white">io</span>
             </p>
@@ -377,27 +378,27 @@ export default function AdminBookingsPage() {
   const { data: bookings, isLoading, refetch, isFetching } = useGetBookings();
   const { logout } = useAdminAuth();
   const [filter, setFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
   const totalCount = bookings?.length ?? 0;
 
-  const readLastSeenFromStorage = useCallback((): number => {
+  const readLastSeen = useCallback((): number => {
     try {
-      const stored = localStorage.getItem(LS_KEY);
+      const stored = localStorage.getItem(LS_NEW_COUNT_KEY);
       return stored !== null ? Number.parseInt(stored, 10) : 0;
     } catch {
       return 0;
     }
   }, []);
 
-  const [lastSeenCount, setLastSeenCount] = useState<number>(
-    readLastSeenFromStorage,
-  );
+  const [lastSeenCount, setLastSeenCount] = useState<number>(readLastSeen);
   const newBookingCount = Math.max(0, totalCount - lastSeenCount);
 
+  // Mark all as seen once loaded
   useEffect(() => {
     if (!isLoading && bookings !== undefined && totalCount > 0) {
       try {
-        localStorage.setItem(LS_KEY, String(totalCount));
+        localStorage.setItem(LS_NEW_COUNT_KEY, String(totalCount));
         setLastSeenCount(totalCount);
       } catch {
         // ignore
@@ -405,16 +406,14 @@ export default function AdminBookingsPage() {
     }
   }, [isLoading, bookings, totalCount]);
 
+  // Broadcast badge count to Layout
   useEffect(() => {
-    const prevSeen = readLastSeenFromStorage();
+    const prevSeen = readLastSeen();
     const count = isLoading ? 0 : Math.max(0, totalCount - prevSeen);
     window.dispatchEvent(
       new CustomEvent("cleanio:new-booking-count", { detail: { count } }),
     );
-  }, [isLoading, totalCount, readLastSeenFromStorage]);
-
-  const filtered =
-    bookings?.filter((b) => filter === "all" || b.status === filter) ?? [];
+  }, [isLoading, totalCount, readLastSeen]);
 
   const counts = {
     all: bookings?.length ?? 0,
@@ -424,6 +423,19 @@ export default function AdminBookingsPage() {
     completed:
       bookings?.filter((b) => b.status === Status.completed).length ?? 0,
   };
+
+  const filtered = (bookings ?? [])
+    .filter((b) => filter === "all" || b.status === filter)
+    .filter((b) => {
+      if (!search.trim()) return true;
+      const q = search.trim().toLowerCase();
+      return (
+        b.id.toLowerCase().includes(q) ||
+        b.customerName.toLowerCase().includes(q) ||
+        b.phoneNumber.includes(q) ||
+        b.address.toLowerCase().includes(q)
+      );
+    });
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -472,12 +484,12 @@ export default function AdminBookingsPage() {
 
       {/* Pending Call Reminder Banner */}
       {counts.pending > 0 && (
-        <div className="flex items-center gap-3 mb-6 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-xl">
+        <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-xl">
           <Phone className="w-4 h-4 text-green-400 flex-shrink-0 animate-pulse" />
           <p className="text-sm text-green-400 font-medium">
             {counts.pending} pending{" "}
-            {counts.pending === 1 ? "booking" : "bookings"} — call the customer
-            to confirm!
+            {counts.pending === 1 ? "booking" : "bookings"} — call customers to
+            confirm!
           </p>
         </div>
       )}
@@ -486,7 +498,7 @@ export default function AdminBookingsPage() {
       {newBookingCount > 0 && (
         <div
           data-ocid="admin.new_bookings.success_state"
-          className="flex items-center gap-3 mb-6 px-4 py-3 bg-brand-orange/10 border border-brand-orange/30 rounded-xl"
+          className="flex items-center gap-3 mb-4 px-4 py-3 bg-brand-orange/10 border border-brand-orange/30 rounded-xl"
         >
           <Bell className="w-4 h-4 text-brand-orange flex-shrink-0 animate-pulse" />
           <p className="text-sm text-brand-orange font-medium">
@@ -497,37 +509,44 @@ export default function AdminBookingsPage() {
         </div>
       )}
 
-      {/* Filter Tabs */}
-      <div
-        className="flex gap-2 mb-6 overflow-x-auto pb-1"
-        data-ocid="admin.bookings.tab"
-      >
-        {[
-          { key: "all", label: "All", count: counts.all },
-          { key: "pending", label: "Pending", count: counts.pending },
-          { key: "confirmed", label: "Confirmed", count: counts.confirmed },
-          { key: "completed", label: "Completed", count: counts.completed },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setFilter(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-              filter === tab.key
-                ? "bg-brand-orange text-charcoal shadow-orange-glow"
-                : "bg-charcoal-light border border-border text-muted-foreground hover:text-foreground hover:border-brand-orange/50"
-            }`}
-          >
-            {tab.label}
-            <span
-              className={`text-xs px-1.5 py-0.5 rounded-full ${
-                filter === tab.key ? "bg-charcoal/20" : "bg-charcoal-mid"
+      {/* Search + Filter Row */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <Input
+          data-ocid="admin.bookings.search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name, phone, address, ID…"
+          className="bg-charcoal-light border-border text-foreground placeholder:text-muted-foreground focus:border-brand-orange flex-1"
+        />
+        <div
+          className="flex gap-2 overflow-x-auto pb-1"
+          data-ocid="admin.bookings.tab"
+        >
+          {[
+            { key: "all", label: "All", count: counts.all },
+            { key: "pending", label: "Pending", count: counts.pending },
+            { key: "confirmed", label: "Confirmed", count: counts.confirmed },
+            { key: "completed", label: "Completed", count: counts.completed },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setFilter(tab.key)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                filter === tab.key
+                  ? "bg-brand-orange text-charcoal shadow-orange-glow"
+                  : "bg-charcoal-light border border-border text-muted-foreground hover:text-foreground hover:border-brand-orange/50"
               }`}
             >
-              {tab.count}
-            </span>
-          </button>
-        ))}
+              {tab.label}
+              <span
+                className={`text-xs px-1.5 py-0.5 rounded-full ${filter === tab.key ? "bg-charcoal/20" : "bg-charcoal-mid"}`}
+              >
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Bookings List */}
@@ -556,9 +575,11 @@ export default function AdminBookingsPage() {
             No bookings found
           </h3>
           <p className="text-muted-foreground text-sm">
-            {filter === "all"
-              ? "No bookings have been made yet."
-              : `No ${filter} bookings at the moment.`}
+            {search.trim()
+              ? "No bookings match your search."
+              : filter === "all"
+                ? "No bookings have been made yet."
+                : `No ${filter} bookings at the moment.`}
           </p>
         </div>
       ) : (

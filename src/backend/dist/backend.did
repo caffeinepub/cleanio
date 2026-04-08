@@ -1,0 +1,54 @@
+type VehicleType = 
+ variant {
+   electric;
+   motorcycle;
+   scooter;
+ };
+type Status = 
+ variant {
+   completed;
+   confirmed;
+   pending;
+ };
+type ServiceType = 
+ variant {
+   cleaning;
+   fullService;
+   repair;
+ };
+type CleaningSubOption = 
+ variant {
+   colourFoamWashing: nat;
+   normalFoamWashing: nat;
+ };
+type Capacity = 
+ variant {
+   above200cc;
+   upTo200cc;
+ };
+type Booking = 
+ record {
+   address: text;
+   capacity: Capacity;
+   cleaningSubOption: opt CleaningSubOption;
+   createdAt: int;
+   customerName: text;
+   id: text;
+   mechanicName: opt text;
+   phoneNumber: text;
+   repairDetails: opt text;
+   serviceType: ServiceType;
+   status: Status;
+   timeSlot: opt text;
+   vehicleType: VehicleType;
+ };
+service : {
+  assignMechanic: (id: text, mechanicName: text) -> ();
+  createBooking: (id: text, customerName: text, phoneNumber: text, address:
+   text, vehicleType: VehicleType, capacity: Capacity, serviceType:
+   ServiceType, repairDetails: opt text, cleaningSubOption:
+   opt CleaningSubOption, timeSlot: opt text) -> ();
+  getBooking: (id: text) -> (opt Booking) query;
+  getBookings: () -> (vec Booking) query;
+  updateBookingStatus: (id: text, newStatus: Status) -> ();
+}

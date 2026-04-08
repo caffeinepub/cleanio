@@ -123,7 +123,7 @@ export default function BookingForm({
     setSubmitError(null);
 
     const evTag = isElectric ? " [Electric Vehicle]" : "";
-    const fullAddress = `${address} | Slot: ${timeSlot}${evTag}`;
+    const fullAddress = `${address}${evTag}`;
 
     const subOption = buildCleaningSubOption();
 
@@ -145,6 +145,7 @@ export default function BookingForm({
         serviceType,
         repairDetails: repairDetails ? repairDetails : null,
         cleaningSubOption: subOption,
+        timeSlot: timeSlot || null,
       });
 
       navigate({

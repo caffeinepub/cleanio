@@ -1,0 +1,27 @@
+{
+  "overview": "Cleanio is a doorstep two-wheeler service platform offering Full Service, Repair, and Cleaning for both petrol and electric bikes. Customers can book services, track their booking status, and view their booking history. Admins manage bookings, assign mechanics, and confirm via call.",
+  "features": [
+    "Doorstep two-wheeler service booking (Full Service, Repair, Cleaning)",
+    "Electric vehicle support with flat ₹999 pricing",
+    "Booking tracking page with live status",
+    "Customer booking history saved to browser",
+    "Admin panel with mechanic assignment and call-to-confirm workflow",
+    "WhatsApp floating button with pre-filled greeting template",
+    "QR code generation and download",
+    "Online payment setup via Stripe",
+    "AI-powered repair chatbot diagnosis",
+    "Premium annual plans (₹1599/₹1999)"
+  ],
+  "category": "service-booking",
+  "tags": [
+    "two-wheeler",
+    "doorstep-service",
+    "booking",
+    "admin-panel",
+    "india",
+    "electric-vehicle",
+    "repair",
+    "cleaning"
+  ],
+  "last_updated": "2026-04-08T02:33:03.824Z"
+}

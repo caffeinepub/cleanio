@@ -95,12 +95,14 @@ export interface Booking {
     status: Status;
     vehicleType: VehicleType;
     serviceType: ServiceType;
+    createdAt: bigint;
     address: string;
     mechanicName?: string;
     repairDetails?: string;
     cleaningSubOption?: CleaningSubOption;
     capacity: Capacity;
     phoneNumber: string;
+    timeSlot?: string;
 }
 export type CleaningSubOption = {
     __kind__: "normalFoamWashing";
@@ -130,7 +132,7 @@ export enum VehicleType {
 }
 export interface backendInterface {
     assignMechanic(id: string, mechanicName: string): Promise<void>;
-    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null): Promise<void>;
+    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null, timeSlot: string | null): Promise<void>;
     getBooking(id: string): Promise<Booking | null>;
     getBookings(): Promise<Array<Booking>>;
     updateBookingStatus(id: string, newStatus: Status): Promise<void>;
@@ -152,17 +154,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createBooking(arg0: string, arg1: string, arg2: string, arg3: string, arg4: VehicleType, arg5: Capacity, arg6: ServiceType, arg7: string | null, arg8: CleaningSubOption | null): Promise<void> {
+    async createBooking(arg0: string, arg1: string, arg2: string, arg3: string, arg4: VehicleType, arg5: Capacity, arg6: ServiceType, arg7: string | null, arg8: CleaningSubOption | null, arg9: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8));
+                const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8));
+            const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9));
             return result;
         }
     }
@@ -242,24 +244,28 @@ function from_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uin
     status: _Status;
     vehicleType: _VehicleType;
     serviceType: _ServiceType;
+    createdAt: bigint;
     address: string;
     mechanicName: [] | [string];
     repairDetails: [] | [string];
     cleaningSubOption: [] | [_CleaningSubOption];
     capacity: _Capacity;
     phoneNumber: string;
+    timeSlot: [] | [string];
 }): {
     id: string;
     customerName: string;
     status: Status;
     vehicleType: VehicleType;
     serviceType: ServiceType;
+    createdAt: bigint;
     address: string;
     mechanicName?: string;
     repairDetails?: string;
     cleaningSubOption?: CleaningSubOption;
     capacity: Capacity;
     phoneNumber: string;
+    timeSlot?: string;
 } {
     return {
         id: value.id,
@@ -267,12 +273,14 @@ function from_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uin
         status: from_candid_Status_n14(_uploadFile, _downloadFile, value.status),
         vehicleType: from_candid_VehicleType_n16(_uploadFile, _downloadFile, value.vehicleType),
         serviceType: from_candid_ServiceType_n18(_uploadFile, _downloadFile, value.serviceType),
+        createdAt: value.createdAt,
         address: value.address,
         mechanicName: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.mechanicName)),
         repairDetails: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.repairDetails)),
         cleaningSubOption: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.cleaningSubOption)),
         capacity: from_candid_Capacity_n24(_uploadFile, _downloadFile, value.capacity),
-        phoneNumber: value.phoneNumber
+        phoneNumber: value.phoneNumber,
+        timeSlot: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.timeSlot))
     };
 }
 function from_candid_variant_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {

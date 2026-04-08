@@ -1,7 +1,10 @@
 import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Runtime "mo:core/Runtime";
+import Time "mo:core/Time";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type VehicleType = { #scooter; #motorcycle; #electric };
   type Capacity = { #upTo200cc; #above200cc };
@@ -19,11 +22,13 @@ actor {
     serviceType : ServiceType;
     cleaningSubOption : ?CleaningSubOption;
     repairDetails : ?Text;
+    timeSlot : ?Text;
     status : Status;
     mechanicName : ?Text;
+    createdAt : Int;
   };
 
-  stable var bookings = Map.empty<Text, Booking>();
+  var bookings = Map.empty<Text, Booking>();
 
   // Create a new booking
   public shared func createBooking(
@@ -36,6 +41,7 @@ actor {
     serviceType : ServiceType,
     repairDetails : ?Text,
     cleaningSubOption : ?CleaningSubOption,
+    timeSlot : ?Text,
   ) : async () {
     if (bookings.containsKey(id)) {
       Runtime.trap("Booking ID already exists");
@@ -57,8 +63,10 @@ actor {
       serviceType;
       cleaningSubOption = finalCleaningSubOption;
       repairDetails;
+      timeSlot;
       status = #pending;
       mechanicName = null;
+      createdAt = Time.now();
     };
 
     bookings.add(id, newBooking);

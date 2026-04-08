@@ -1,0 +1,65 @@
+// Version: 3.0.0
+type Booking__519012722 =
+  {
+    address : Text;
+    capacity : Capacity__1025841711;
+    cleaningSubOption : ?CleaningSubOption__741793555;
+    createdAt : Int;
+    customerName : Text;
+    id : Text;
+    mechanicName : ?Text;
+    phoneNumber : Text;
+    repairDetails : ?Text;
+    serviceType : ServiceType__480502690;
+    status : Status__1000080315;
+    timeSlot : ?Text;
+    vehicleType : VehicleType__174430556
+  };
+type Capacity__1025841711 = {#above200cc; #upTo200cc};
+type CleaningSubOption__741793555 =
+  {#colourFoamWashing : Nat; #normalFoamWashing : Nat};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldBooking__221110599 =
+  {
+    address : Text;
+    capacity : OldCapacity__734712760;
+    cleaningSubOption : ?OldCleaningSubOption__873398896;
+    customerName : Text;
+    id : Text;
+    mechanicName : ?Text;
+    phoneNumber : Text;
+    repairDetails : ?Text;
+    serviceType : OldServiceType__1063359608;
+    status : OldStatus__155413022;
+    vehicleType : OldVehicleType__389435927
+  };
+type OldCapacity__734712760 = {#above200cc; #upTo200cc};
+type OldCleaningSubOption__873398896 =
+  {#colourFoamWashing : Nat; #normalFoamWashing : Nat};
+type OldServiceType__1063359608 = {#cleaning; #fullService; #repair};
+type OldStatus__155413022 = {#completed; #confirmed; #pending};
+type OldVehicleType__389435927 = {#electric; #motorcycle; #scooter};
+type ServiceType__480502690 = {#cleaning; #fullService; #repair};
+type Status__1000080315 = {#completed; #confirmed; #pending};
+type VehicleType__174430556 = {#electric; #motorcycle; #scooter};
+actor ({
+  in bookings : Map__605269027<Text, OldBooking__221110599>
+}, {
+  stable var bookings :
+    {
+      var root : Node__46230540<Text, Booking__519012722>;
+      var size : Nat__490723111
+    }
+}) ;

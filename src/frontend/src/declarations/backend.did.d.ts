@@ -16,12 +16,14 @@ export interface Booking {
   'status' : Status,
   'vehicleType' : VehicleType,
   'serviceType' : ServiceType,
+  'createdAt' : bigint,
   'address' : string,
   'mechanicName' : [] | [string],
   'repairDetails' : [] | [string],
   'cleaningSubOption' : [] | [CleaningSubOption],
   'capacity' : Capacity,
   'phoneNumber' : string,
+  'timeSlot' : [] | [string],
 }
 export type Capacity = { 'upTo200cc' : null } |
   { 'above200cc' : null };
@@ -49,6 +51,7 @@ export interface _SERVICE {
       ServiceType,
       [] | [string],
       [] | [CleaningSubOption],
+      [] | [string],
     ],
     undefined
   >,

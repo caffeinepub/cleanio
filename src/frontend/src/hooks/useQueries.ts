@@ -45,6 +45,7 @@ export interface CreateBookingParams {
   serviceType: ServiceType;
   repairDetails: string | null;
   cleaningSubOption: CleaningSubOption | null;
+  timeSlot: string | null;
 }
 
 function generateBookingId(): string {
@@ -99,6 +100,7 @@ export function useCreateBooking() {
             params.serviceType,
             params.repairDetails,
             params.cleaningSubOption,
+            params.timeSlot,
           );
           // Return the ID that was successfully stored
           return bookingId;

@@ -18,8 +18,8 @@ function useNewBookingCount() {
   return { badgeCount };
 }
 
-const LOGO_SRC =
-  "/assets/uploads/file_000000006ec461f5905d0bdb5d01b34a-1-1-1-1.png";
+// Logo served from public/assets/logo.png — the original uploaded orange scooter
+const LOGO_SRC = "/assets/logo.png";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +27,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { badgeCount } = useNewBookingCount();
 
   const WHATSAPP_NUMBER = "919637113065";
+  const appOrigin =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://cleanio.icp0.io";
   const WHATSAPP_MESSAGE = encodeURIComponent(
-    `Hello Cleanio! 👋\n\nI'd like to know more about your services.\n\nPlease select an option:\n1️⃣ Full Service\n2️⃣ Repair\n3️⃣ Cleaning\n4️⃣ Premium Plans\n5️⃣ Track my Booking – visit: ${typeof window !== "undefined" ? window.location.origin : "https://cleanio.icp0.io"}/track-booking\n6️⃣ Other Query`,
+    `Hello Cleanio! 👋\n\nI'd like to know more about your services.\n\nPlease select an option:\n1️⃣ Full Service\n2️⃣ Repair\n3️⃣ Cleaning\n4️⃣ Premium Plans\n5️⃣ Track my Booking – visit: ${appOrigin}/track-booking\n6️⃣ Other Query`,
   );
   const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
@@ -37,6 +41,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { label: "Full Service", path: "/full-service" },
     { label: "Repair", path: "/repair" },
     { label: "Cleaning", path: "/cleaning" },
+    { label: "Premium Plans", path: "/premium-plans" },
+    { label: "Track Booking", path: "/track-booking" },
     {
       label: "My Bookings",
       path: "/my-bookings",
@@ -59,17 +65,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2 group flex-shrink-0"
             data-ocid="nav.home.link"
           >
-            {/* Logo box: fixed 36x36, white background, rounded, no overflow clipping */}
+            {/* Logo box: 48x48, white background, rounded, object-contain so nothing overflows */}
             <div
-              className="flex-shrink-0 rounded-md bg-white flex items-center justify-center"
-              style={{ width: 36, height: 36, padding: 3 }}
+              className="flex-shrink-0 rounded-lg bg-white flex items-center justify-center overflow-hidden"
+              style={{ width: 48, height: 48, padding: 4 }}
             >
               <img
                 src={LOGO_SRC}
-                alt="Cleanio logo"
+                alt="Cleanio scooter logo"
                 style={{
                   width: "100%",
                   height: "100%",
@@ -78,21 +84,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 }}
               />
             </div>
-            <span className="text-xl font-bold tracking-tight font-poppins">
+            <span className="text-xl font-bold tracking-tight font-display">
               <span className="text-brand-orange">Clean</span>
               <span className="text-white">io</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {navLinks.map((link) =>
               link.path.includes("#") ? (
                 <a
                   key={link.path}
                   href={link.path}
-                  data-ocid={`nav.${link.label.toLowerCase().replace(" ", "_")}.link`}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-white hover:bg-charcoal-light"
+                  data-ocid={`nav.${link.label.toLowerCase().replace(/\s+/g, "_")}.link`}
+                  className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-white hover:bg-charcoal-light"
                 >
                   {link.label}
                 </a>
@@ -100,8 +106,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={link.path}
                   to={link.path}
-                  data-ocid={`nav.${link.label.toLowerCase().replace(" ", "_")}.link`}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  data-ocid={`nav.${link.label.toLowerCase().replace(/\s+/g, "_")}.link`}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive(link.path)
                       ? "bg-brand-orange text-charcoal"
                       : "text-muted-foreground hover:text-white hover:bg-charcoal-light"
@@ -117,7 +123,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/admin"
               data-ocid="nav.admin.link"
-              className={`ml-2 flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border relative ${
+              className={`ml-1 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border relative ${
                 isActive("/admin")
                   ? "bg-brand-orange text-charcoal border-brand-orange"
                   : "border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-charcoal"
@@ -136,7 +142,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Mobile Menu Toggle */}
           <button
             type="button"
-            className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-charcoal-light transition-all"
+            className="lg:hidden p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-charcoal-light transition-all"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -150,7 +156,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Mobile Nav */}
         {menuOpen && (
-          <div className="md:hidden border-t border-border bg-charcoal">
+          <div className="lg:hidden border-t border-border bg-charcoal">
             <nav className="container mx-auto px-4 py-3 flex flex-col gap-1">
               {navLinks.map((link) =>
                 link.path.includes("#") ? (
@@ -158,7 +164,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     key={link.path}
                     href={link.path}
                     onClick={() => setMenuOpen(false)}
-                    data-ocid={`nav.${link.label.toLowerCase().replace(" ", "_")}.mobile.link`}
+                    data-ocid={`nav.${link.label.toLowerCase().replace(/\s+/g, "_")}.mobile.link`}
                     className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-white hover:bg-charcoal-light"
                   >
                     {link.label}
@@ -234,9 +240,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
+              {/* Footer logo: 36x36 white box, same file, object-contain */}
               <div
-                className="flex-shrink-0 rounded bg-white flex items-center justify-center"
-                style={{ width: 28, height: 28, padding: 2 }}
+                className="flex-shrink-0 rounded-md bg-white flex items-center justify-center overflow-hidden"
+                style={{ width: 36, height: 36, padding: 3 }}
               >
                 <img
                   src={LOGO_SRC}
@@ -249,7 +256,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   }}
                 />
               </div>
-              <span className="font-bold font-poppins">
+              <span className="font-bold font-display">
                 <span className="text-brand-orange">Clean</span>
                 <span className="text-white">io</span>
               </span>

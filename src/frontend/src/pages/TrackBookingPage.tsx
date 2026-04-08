@@ -6,7 +6,6 @@ import {
   Clock,
   Loader2,
   MapPin,
-  Phone,
   Search,
   UserCheck,
   Wrench,
@@ -21,7 +20,15 @@ const SERVICE_LABELS: Record<string, string> = {
   cleaning: "Cleaning",
 };
 
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<
+  string,
+  {
+    label: string;
+    color: string;
+    icon: React.ReactNode;
+    message: string;
+  }
+> = {
   pending: {
     label: "Pending",
     color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -44,7 +51,7 @@ const STATUS_CONFIG = {
   },
 };
 
-function getCleaningSubOptionLabel(
+function getCleaningLabel(
   booking: { cleaningSubOption?: { __kind__: string } } | null,
 ): string | null {
   if (!booking?.cleaningSubOption) return null;
@@ -60,7 +67,7 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center gap-3 py-10">
+      <div className="flex flex-col items-center gap-3 py-12">
         <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
         <p className="text-muted-foreground text-sm">
           Looking up your booking…
@@ -71,25 +78,27 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
 
   if (isError || booking === null || booking === undefined) {
     return (
-      <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center">
+      <div
+        data-ocid="track.error_state"
+        className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center"
+      >
         <p className="text-red-400 font-semibold mb-1">Booking Not Found</p>
         <p className="text-muted-foreground text-sm">
-          No booking found with that ID. Please double-check your Booking ID and
-          try again.
+          No booking found with that ID. Please double-check and try again.
         </p>
       </div>
     );
   }
 
   const statusConfig = STATUS_CONFIG[booking.status] ?? STATUS_CONFIG.pending;
-  const cleaningLabel = getCleaningSubOptionLabel(booking);
+  const cleaningLabel = getCleaningLabel(booking);
   const serviceDisplay = cleaningLabel
     ? `Cleaning – ${cleaningLabel}`
     : SERVICE_LABELS[booking.serviceType] || booking.serviceType;
   const isEV = booking.vehicleType === "electric";
 
   return (
-    <div className="space-y-4 animate-fade-in-up">
+    <div className="space-y-4 animate-fade-in-up" data-ocid="track.result">
       {/* Status Banner */}
       <div
         className={`flex items-start gap-3 p-4 rounded-2xl border ${statusConfig.color}`}
@@ -101,9 +110,9 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
         </div>
       </div>
 
-      {/* Booking Info Card */}
+      {/* Booking Info */}
       <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
-        <h3 className="font-semibold text-foreground text-sm mb-3 flex items-center gap-2">
+        <h3 className="font-semibold text-foreground text-sm flex items-center gap-2 mb-3">
           <Search className="w-4 h-4 text-brand-orange" />
           Booking Details
         </h3>
@@ -150,6 +159,20 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
         </div>
         <div className="h-px bg-border" />
 
+        {booking.timeSlot && (
+          <>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground text-sm flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5" /> Time Slot
+              </span>
+              <span className="text-foreground font-medium text-sm">
+                {booking.timeSlot}
+              </span>
+            </div>
+            <div className="h-px bg-border" />
+          </>
+        )}
+
         <div className="flex justify-between items-start">
           <span className="text-muted-foreground text-sm flex items-center gap-1">
             <MapPin className="w-3.5 h-3.5" /> Address
@@ -165,11 +188,7 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
             <UserCheck className="w-3.5 h-3.5" /> Mechanic
           </span>
           <span
-            className={`text-sm font-medium ${
-              booking.mechanicName
-                ? "text-foreground"
-                : "text-muted-foreground italic"
-            }`}
+            className={`text-sm font-medium ${booking.mechanicName ? "text-foreground" : "text-muted-foreground italic"}`}
           >
             {booking.mechanicName ?? "Not yet assigned"}
           </span>
@@ -190,7 +209,7 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
         )}
       </div>
 
-      {/* Help Section */}
+      {/* WhatsApp Help */}
       <div className="bg-brand-orange/5 border border-brand-orange/20 rounded-2xl p-4 text-center">
         <p className="text-sm text-muted-foreground">
           Need help? Chat with us on{" "}
@@ -202,7 +221,7 @@ function BookingDetails({ bookingId }: { bookingId: string }) {
           >
             WhatsApp
           </a>{" "}
-          and mention your Booking ID.
+          and share your Booking ID.
         </p>
       </div>
     </div>
@@ -220,6 +239,7 @@ export default function TrackBookingPage() {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-lg">
+      {/* Header */}
       <div className="text-center mb-8">
         <div className="w-16 h-16 bg-brand-orange/10 border border-brand-orange/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <Search className="w-8 h-8 text-brand-orange" />
@@ -228,30 +248,32 @@ export default function TrackBookingPage() {
           Track Your Booking
         </h1>
         <p className="text-muted-foreground text-sm">
-          Enter your Booking ID to check the status of your service.
+          Enter your Booking ID to check the live status of your service.
         </p>
       </div>
 
       {/* Search Form */}
       <div className="bg-card border border-border rounded-2xl p-5 mb-6">
         <label
-          htmlFor="booking-id-input"
+          htmlFor="track-booking-input"
           className="text-sm font-medium text-foreground mb-2 block"
         >
           Booking ID
         </label>
         <div className="flex gap-2">
           <Input
+            id="track-booking-input"
+            data-ocid="track.input"
             value={inputId}
             onChange={(e) => setInputId(e.target.value)}
-            id="booking-id-input"
-            placeholder="e.g. BK-123456"
+            placeholder="e.g. BK-1234567890-ABCD"
             className="bg-charcoal-light border-border text-foreground placeholder:text-muted-foreground focus:border-brand-orange flex-1"
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSearch();
             }}
           />
           <Button
+            data-ocid="track.button"
             onClick={handleSearch}
             disabled={!inputId.trim()}
             className="bg-brand-orange hover:bg-brand-orange-light text-charcoal font-semibold px-5"

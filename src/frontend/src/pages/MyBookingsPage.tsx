@@ -48,9 +48,7 @@ const STATUS_CONFIG: Record<
   },
 };
 
-function getCleaningSubOptionLabel(
-  booking: Booking | null | undefined,
-): string | null {
+function getCleaningLabel(booking: Booking | null | undefined): string | null {
   if (!booking?.cleaningSubOption) return null;
   if (booking.cleaningSubOption.__kind__ === "colourFoamWashing")
     return "Colour Foam Washing ₹199";
@@ -73,7 +71,7 @@ function BookingCard({
   const statusCfg = booking
     ? (STATUS_CONFIG[booking.status] ?? STATUS_CONFIG.pending)
     : null;
-  const cleaningLabel = getCleaningSubOptionLabel(booking);
+  const cleaningLabel = getCleaningLabel(booking);
   const serviceDisplay = booking
     ? cleaningLabel
       ? `Cleaning – ${cleaningLabel}`
@@ -86,7 +84,7 @@ function BookingCard({
       data-ocid={`bookings.item.${index + 1}`}
       className="bg-card border border-border rounded-2xl p-5 space-y-4 transition-all hover:border-brand-orange/40"
     >
-      {/* Card Header */}
+      {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
@@ -117,7 +115,7 @@ function BookingCard({
         </div>
       </div>
 
-      {/* Loading / Error / Content */}
+      {/* Loading */}
       {isLoading && (
         <div
           data-ocid={`bookings.loading_state.${index + 1}`}
@@ -128,6 +126,7 @@ function BookingCard({
         </div>
       )}
 
+      {/* Error */}
       {(isError || (!isLoading && booking === null)) && (
         <div
           data-ocid={`bookings.error_state.${index + 1}`}
@@ -137,9 +136,9 @@ function BookingCard({
         </div>
       )}
 
+      {/* Content */}
       {!isLoading && booking && (
         <div className="space-y-2.5">
-          {/* Service + Vehicle Row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-charcoal-light rounded-xl p-3">
               <p className="text-muted-foreground text-xs mb-1">Service</p>
@@ -165,7 +164,6 @@ function BookingCard({
             </div>
           </div>
 
-          {/* Customer + Address */}
           <div className="flex items-start justify-between gap-2 text-sm">
             <span className="text-muted-foreground flex items-center gap-1">
               <UserCheck className="w-3.5 h-3.5" />
@@ -177,7 +175,13 @@ function BookingCard({
             </span>
           </div>
 
-          {/* Mechanic */}
+          {booking.timeSlot && (
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {booking.timeSlot}
+            </div>
+          )}
+
           {booking.mechanicName && (
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <Wrench className="w-3 h-3" />
@@ -205,7 +209,6 @@ export default function MyBookingsPage() {
   const [addInput, setAddInput] = useState("");
   const [addError, setAddError] = useState("");
 
-  // Persist to localStorage whenever list changes
   useEffect(() => {
     localStorage.setItem(LS_KEY, JSON.stringify(bookingIds));
   }, [bookingIds]);
@@ -231,7 +234,7 @@ export default function MyBookingsPage() {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-2xl">
-      {/* Page Header */}
+      {/* Header */}
       <div className="text-center mb-10">
         <div className="w-16 h-16 bg-brand-orange/10 border border-brand-orange/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <History className="w-8 h-8 text-brand-orange" />
@@ -248,7 +251,7 @@ export default function MyBookingsPage() {
       <div className="bg-card border border-border rounded-2xl p-5 mb-8">
         <p className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
           <Plus className="w-4 h-4 text-brand-orange" />
-          Add a Booking ID
+          Add a Booking ID manually
         </p>
         <div className="flex gap-2">
           <Input
@@ -261,7 +264,7 @@ export default function MyBookingsPage() {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleAdd();
             }}
-            placeholder="e.g. BK-123456"
+            placeholder="e.g. BK-1234567890-ABCD"
             className="bg-charcoal-light border-border text-foreground placeholder:text-muted-foreground focus:border-brand-orange flex-1"
           />
           <Button
@@ -286,7 +289,7 @@ export default function MyBookingsPage() {
         </p>
       </div>
 
-      {/* Booking List */}
+      {/* List */}
       {bookingIds.length === 0 ? (
         <div
           data-ocid="bookings.empty_state"

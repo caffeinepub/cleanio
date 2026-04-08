@@ -7,7 +7,7 @@ import {
   Copy,
   History,
   Home,
-  Loader2,
+  MessageCircle,
   Phone,
   Search,
   UserCheck,
@@ -23,7 +23,7 @@ const SERVICE_LABELS: Record<string, string> = {
   cleaning: "Cleaning",
 };
 
-function getCleaningSubOptionLabel(
+function getCleaningLabel(
   booking: { cleaningSubOption?: { __kind__: string } } | null,
 ): string | null {
   if (!booking?.cleaningSubOption) return null;
@@ -47,7 +47,7 @@ export default function BookingConfirmationPage() {
   const { data: booking, isLoading } = useGetBooking(bookingId);
   const [copied, setCopied] = useState(false);
 
-  // Save booking ID to localStorage history on mount
+  // Auto-save booking ID to localStorage
   useEffect(() => {
     if (!bookingId) return;
     try {
@@ -63,7 +63,7 @@ export default function BookingConfirmationPage() {
     }
   }, [bookingId]);
 
-  const cleaningLabel = getCleaningSubOptionLabel(booking ?? null);
+  const cleaningLabel = getCleaningLabel(booking ?? null);
   const serviceDisplay = cleaningLabel
     ? `Cleaning – ${cleaningLabel}`
     : SERVICE_LABELS[service] || service;
@@ -75,31 +75,37 @@ export default function BookingConfirmationPage() {
     });
   }
 
+  const whatsappMessage = encodeURIComponent(
+    `Hi Cleanio! 👋\nI just booked a service.\nBooking ID: ${bookingId}\nService: ${serviceDisplay}\nSlot: ${slot}\n\nCan you confirm my booking?`,
+  );
+  const whatsappUrl = `https://wa.me/919637113065?text=${whatsappMessage}`;
+
   return (
-    <div className="container mx-auto px-4 py-16 max-w-lg">
-      <div className="bg-card border border-border rounded-3xl p-8 text-center shadow-card animate-fade-in-up">
+    <div className="container mx-auto px-4 py-12 max-w-lg">
+      <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in-up">
         {/* Success Icon */}
-        <div className="w-20 h-20 bg-brand-orange/10 border-2 border-brand-orange/30 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-orange">
-          <CheckCircle className="w-10 h-10 text-brand-orange" />
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="w-20 h-20 bg-green-500/10 border-2 border-green-500/30 rounded-full flex items-center justify-center mb-5 animate-pulse-orange">
+            <CheckCircle className="w-10 h-10 text-green-400" />
+          </div>
+          <h1 className="font-display font-black text-3xl text-foreground mb-2">
+            Booking Confirmed!
+          </h1>
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
+            Your service request has been received. Our team will call you
+            shortly to confirm.
+          </p>
         </div>
 
-        <h1 className="font-display font-black text-3xl text-foreground mb-2">
-          Booking Confirmed!
-        </h1>
-        <p className="text-muted-foreground mb-6">
-          Your service has been booked successfully. Our technician will be at
-          your doorstep on time.
-        </p>
-
-        {/* Prominent Booking ID Box */}
+        {/* Booking ID — prominent orange box */}
         <div
           data-ocid="booking.id.panel"
           className="bg-brand-orange/10 border-2 border-brand-orange/40 rounded-2xl px-6 py-5 mb-6 text-center"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-brand-orange mb-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-2">
             Your Booking ID
           </p>
-          <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="flex items-center justify-center gap-3 mb-1">
             <span className="text-brand-orange font-mono font-black text-2xl tracking-wider">
               {bookingId}
             </span>
@@ -128,8 +134,8 @@ export default function BookingConfirmationPage() {
           </p>
         </div>
 
-        {/* Booking Details */}
-        <div className="bg-charcoal-light border border-border rounded-2xl p-5 text-left space-y-3 mb-6">
+        {/* Service Details */}
+        <div className="bg-charcoal-light border border-border rounded-2xl p-5 space-y-3 mb-5">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm">Customer</span>
             <span className="text-foreground font-medium text-sm">{name}</span>
@@ -151,46 +157,38 @@ export default function BookingConfirmationPage() {
           <div className="h-px bg-border" />
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm">Status</span>
-            <span className="bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 text-xs font-semibold px-2 py-1 rounded-full">
-              Pending
+            <span className="bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 text-xs font-semibold px-2.5 py-1 rounded-full">
+              Pending Confirmation
             </span>
           </div>
-          <div className="h-px bg-border" />
-          {/* Mechanic Assignment */}
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-sm flex items-center gap-1">
-              <UserCheck className="w-3.5 h-3.5" /> Assigned Mechanic
-            </span>
-            {isLoading ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
-            ) : (
-              <span
-                className={`text-sm font-medium ${
-                  booking?.mechanicName
-                    ? "text-foreground"
-                    : "text-muted-foreground italic"
-                }`}
-              >
-                {booking?.mechanicName ?? "Not yet assigned"}
-              </span>
-            )}
-          </div>
+          {!isLoading && booking?.mechanicName && (
+            <>
+              <div className="h-px bg-border" />
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground text-sm flex items-center gap-1">
+                  <UserCheck className="w-3.5 h-3.5" /> Mechanic
+                </span>
+                <span className="text-foreground font-medium text-sm">
+                  {booking.mechanicName}
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Call Confirmation Banner */}
-        <div className="bg-green-500/10 border border-green-500/30 rounded-2xl p-5 mb-8 text-left">
+        <div className="bg-green-500/10 border border-green-500/30 rounded-2xl p-4 mb-6">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Phone className="w-5 h-5 text-green-400" />
+            <div className="w-9 h-9 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Phone className="w-4 h-4 text-green-400" />
             </div>
             <div>
-              <p className="text-sm text-foreground font-semibold mb-1">
+              <p className="text-sm font-semibold text-green-400 mb-0.5">
                 Our team will call you to confirm
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                A Cleanio team member will call you on your registered number
-                shortly to confirm your booking, share the technician's details,
-                and answer any questions. Please keep your phone handy!
+                A Cleanio technician will call you on your registered number
+                shortly to confirm your booking slot and share their ETA.
               </p>
             </div>
           </div>
@@ -200,11 +198,7 @@ export default function BookingConfirmationPage() {
         <div className="flex flex-col gap-3">
           <Button
             data-ocid="booking.track.button"
-            onClick={() =>
-              navigate({
-                to: "/track-booking",
-              })
-            }
+            onClick={() => navigate({ to: "/track-booking" })}
             className="w-full bg-brand-orange hover:bg-brand-orange-light text-charcoal font-bold py-3 rounded-xl shadow-orange-glow transition-all"
           >
             <Search className="w-4 h-4 mr-2" />
@@ -219,11 +213,21 @@ export default function BookingConfirmationPage() {
             <History className="w-4 h-4 mr-2" />
             View All My Bookings
           </Button>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-ocid="booking.whatsapp.button"
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl border border-[#25D366]/40 text-[#25D366] hover:bg-[#25D366]/10 transition-all text-sm font-semibold"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Share via WhatsApp
+          </a>
           <Button
             data-ocid="booking.home.button"
             onClick={() => navigate({ to: "/" })}
             variant="outline"
-            className="w-full border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange rounded-xl transition-all"
+            className="w-full border-border text-foreground hover:bg-charcoal-light hover:border-brand-orange/50 rounded-xl transition-all"
           >
             <Home className="w-4 h-4 mr-2" />
             Back to Home

@@ -37,12 +37,14 @@ export const Booking = IDL.Record({
   'status' : Status,
   'vehicleType' : VehicleType,
   'serviceType' : ServiceType,
+  'createdAt' : IDL.Int,
   'address' : IDL.Text,
   'mechanicName' : IDL.Opt(IDL.Text),
   'repairDetails' : IDL.Opt(IDL.Text),
   'cleaningSubOption' : IDL.Opt(CleaningSubOption),
   'capacity' : Capacity,
   'phoneNumber' : IDL.Text,
+  'timeSlot' : IDL.Opt(IDL.Text),
 });
 
 export const idlService = IDL.Service({
@@ -58,6 +60,7 @@ export const idlService = IDL.Service({
         ServiceType,
         IDL.Opt(IDL.Text),
         IDL.Opt(CleaningSubOption),
+        IDL.Opt(IDL.Text),
       ],
       [],
       [],
@@ -99,12 +102,14 @@ export const idlFactory = ({ IDL }) => {
     'status' : Status,
     'vehicleType' : VehicleType,
     'serviceType' : ServiceType,
+    'createdAt' : IDL.Int,
     'address' : IDL.Text,
     'mechanicName' : IDL.Opt(IDL.Text),
     'repairDetails' : IDL.Opt(IDL.Text),
     'cleaningSubOption' : IDL.Opt(CleaningSubOption),
     'capacity' : Capacity,
     'phoneNumber' : IDL.Text,
+    'timeSlot' : IDL.Opt(IDL.Text),
   });
   
   return IDL.Service({
@@ -120,6 +125,7 @@ export const idlFactory = ({ IDL }) => {
           ServiceType,
           IDL.Opt(IDL.Text),
           IDL.Opt(CleaningSubOption),
+          IDL.Opt(IDL.Text),
         ],
         [],
         [],
