@@ -47,10 +47,6 @@ actor {
     bikeBrand : ?Text,
     bikeModel : ?Text,
   ) : async () {
-    if (bookings.containsKey(id)) {
-      Runtime.trap("Booking ID already exists");
-    };
-
     let finalCleaningSubOption = switch (serviceType, cleaningSubOption) {
       case (#cleaning, null) { Runtime.trap("Cleaning sub-option required for cleaning service") };
       case (#cleaning, option) { option };
