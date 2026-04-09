@@ -95,7 +95,9 @@ export interface Booking {
     status: Status;
     vehicleType: VehicleType;
     serviceType: ServiceType;
+    bikeBrand?: string;
     createdAt: bigint;
+    bikeModel?: string;
     address: string;
     mechanicName?: string;
     repairDetails?: string;
@@ -132,7 +134,7 @@ export enum VehicleType {
 }
 export interface backendInterface {
     assignMechanic(id: string, mechanicName: string): Promise<void>;
-    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null, timeSlot: string | null): Promise<void>;
+    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null, timeSlot: string | null, bikeBrand: string | null, bikeModel: string | null): Promise<void>;
     getBooking(id: string): Promise<Booking | null>;
     getBookings(): Promise<Array<Booking>>;
     updateBookingStatus(id: string, newStatus: Status): Promise<void>;
@@ -154,17 +156,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createBooking(arg0: string, arg1: string, arg2: string, arg3: string, arg4: VehicleType, arg5: Capacity, arg6: ServiceType, arg7: string | null, arg8: CleaningSubOption | null, arg9: string | null): Promise<void> {
+    async createBooking(arg0: string, arg1: string, arg2: string, arg3: string, arg4: VehicleType, arg5: Capacity, arg6: ServiceType, arg7: string | null, arg8: CleaningSubOption | null, arg9: string | null, arg10: string | null, arg11: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9));
+                const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg10), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg11));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9));
+            const result = await this.actor.createBooking(arg0, arg1, arg2, arg3, to_candid_VehicleType_n1(this._uploadFile, this._downloadFile, arg4), to_candid_Capacity_n3(this._uploadFile, this._downloadFile, arg5), to_candid_ServiceType_n5(this._uploadFile, this._downloadFile, arg6), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg7), to_candid_opt_n8(this._uploadFile, this._downloadFile, arg8), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg9), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg10), to_candid_opt_n7(this._uploadFile, this._downloadFile, arg11));
             return result;
         }
     }
@@ -244,7 +246,9 @@ function from_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uin
     status: _Status;
     vehicleType: _VehicleType;
     serviceType: _ServiceType;
+    bikeBrand: [] | [string];
     createdAt: bigint;
+    bikeModel: [] | [string];
     address: string;
     mechanicName: [] | [string];
     repairDetails: [] | [string];
@@ -258,7 +262,9 @@ function from_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uin
     status: Status;
     vehicleType: VehicleType;
     serviceType: ServiceType;
+    bikeBrand?: string;
     createdAt: bigint;
+    bikeModel?: string;
     address: string;
     mechanicName?: string;
     repairDetails?: string;
@@ -273,7 +279,9 @@ function from_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uin
         status: from_candid_Status_n14(_uploadFile, _downloadFile, value.status),
         vehicleType: from_candid_VehicleType_n16(_uploadFile, _downloadFile, value.vehicleType),
         serviceType: from_candid_ServiceType_n18(_uploadFile, _downloadFile, value.serviceType),
+        bikeBrand: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.bikeBrand)),
         createdAt: value.createdAt,
+        bikeModel: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.bikeModel)),
         address: value.address,
         mechanicName: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.mechanicName)),
         repairDetails: record_opt_to_undefined(from_candid_opt_n20(_uploadFile, _downloadFile, value.repairDetails)),

@@ -29,6 +29,8 @@ type Capacity =
 type Booking = 
  record {
    address: text;
+   bikeBrand: opt text;
+   bikeModel: opt text;
    capacity: Capacity;
    cleaningSubOption: opt CleaningSubOption;
    createdAt: int;
@@ -47,7 +49,8 @@ service : {
   createBooking: (id: text, customerName: text, phoneNumber: text, address:
    text, vehicleType: VehicleType, capacity: Capacity, serviceType:
    ServiceType, repairDetails: opt text, cleaningSubOption:
-   opt CleaningSubOption, timeSlot: opt text) -> ();
+   opt CleaningSubOption, timeSlot: opt text, bikeBrand: opt text, bikeModel:
+   opt text) -> ();
   getBooking: (id: text) -> (opt Booking) query;
   getBookings: () -> (vec Booking) query;
   updateBookingStatus: (id: text, newStatus: Status) -> ();

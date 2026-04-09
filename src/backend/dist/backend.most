@@ -2,6 +2,8 @@
 type Booking__519012722 =
   {
     address : Text;
+    bikeBrand : ?Text;
+    bikeModel : ?Text;
     capacity : Capacity__1025841711;
     cleaningSubOption : ?CleaningSubOption__741793555;
     createdAt : Int;

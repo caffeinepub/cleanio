@@ -46,6 +46,8 @@ export interface CreateBookingParams {
   repairDetails: string | null;
   cleaningSubOption: CleaningSubOption | null;
   timeSlot: string | null;
+  bikeBrand?: string;
+  bikeModel?: string;
 }
 
 function generateBookingId(): string {
@@ -101,6 +103,8 @@ export function useCreateBooking() {
             params.repairDetails,
             params.cleaningSubOption,
             params.timeSlot,
+            params.bikeBrand ?? null,
+            params.bikeModel ?? null,
           );
           // Return the ID that was successfully stored
           return bookingId;

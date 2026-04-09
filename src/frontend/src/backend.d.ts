@@ -13,7 +13,9 @@ export interface Booking {
     status: Status;
     vehicleType: VehicleType;
     serviceType: ServiceType;
+    bikeBrand?: string;
     createdAt: bigint;
+    bikeModel?: string;
     address: string;
     mechanicName?: string;
     repairDetails?: string;
@@ -50,7 +52,7 @@ export enum VehicleType {
 }
 export interface backendInterface {
     assignMechanic(id: string, mechanicName: string): Promise<void>;
-    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null, timeSlot: string | null): Promise<void>;
+    createBooking(id: string, customerName: string, phoneNumber: string, address: string, vehicleType: VehicleType, capacity: Capacity, serviceType: ServiceType, repairDetails: string | null, cleaningSubOption: CleaningSubOption | null, timeSlot: string | null, bikeBrand: string | null, bikeModel: string | null): Promise<void>;
     getBooking(id: string): Promise<Booking | null>;
     getBookings(): Promise<Array<Booking>>;
     updateBookingStatus(id: string, newStatus: Status): Promise<void>;

@@ -16,7 +16,9 @@ export interface Booking {
   'status' : Status,
   'vehicleType' : VehicleType,
   'serviceType' : ServiceType,
+  'bikeBrand' : [] | [string],
   'createdAt' : bigint,
+  'bikeModel' : [] | [string],
   'address' : string,
   'mechanicName' : [] | [string],
   'repairDetails' : [] | [string],
@@ -51,6 +53,8 @@ export interface _SERVICE {
       ServiceType,
       [] | [string],
       [] | [CleaningSubOption],
+      [] | [string],
+      [] | [string],
       [] | [string],
     ],
     undefined

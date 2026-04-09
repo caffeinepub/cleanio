@@ -61,6 +61,7 @@ const confirmationRoute = createRoute({
     name: (search.name as string) || "",
     service: (search.service as string) || "",
     slot: (search.slot as string) || "",
+    phone: (search.phone as string) || "",
   }),
 });
 

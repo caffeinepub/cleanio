@@ -23,6 +23,8 @@ actor {
     cleaningSubOption : ?CleaningSubOption;
     repairDetails : ?Text;
     timeSlot : ?Text;
+    bikeBrand : ?Text;
+    bikeModel : ?Text;
     status : Status;
     mechanicName : ?Text;
     createdAt : Int;
@@ -42,6 +44,8 @@ actor {
     repairDetails : ?Text,
     cleaningSubOption : ?CleaningSubOption,
     timeSlot : ?Text,
+    bikeBrand : ?Text,
+    bikeModel : ?Text,
   ) : async () {
     if (bookings.containsKey(id)) {
       Runtime.trap("Booking ID already exists");
@@ -64,6 +68,8 @@ actor {
       cleaningSubOption = finalCleaningSubOption;
       repairDetails;
       timeSlot;
+      bikeBrand;
+      bikeModel;
       status = #pending;
       mechanicName = null;
       createdAt = Time.now();

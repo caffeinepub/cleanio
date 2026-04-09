@@ -48,6 +48,199 @@ const CLEANING_OPTION_LABELS: Record<string, string> = {
   normalFoam: "Normal Foam Washing",
 };
 
+// ─── Bike brands & models ────────────────────────────────────────────────────
+
+type BrandModels = Record<string, string[]>;
+
+const BIKE_BRANDS_MODELS: BrandModels = {
+  Hero: [
+    "Splendor Plus",
+    "HF Deluxe",
+    "Passion Pro",
+    "Glamour",
+    "Xtreme 160R",
+    "Destini 125",
+    "Maestro Edge",
+    "Pleasure+",
+    "Xoom",
+    "Super Splendor",
+    "Other",
+  ],
+  Honda: [
+    "Activa 6G",
+    "Activa 125",
+    "Shine 100",
+    "Shine 125",
+    "Unicorn",
+    "CB Hornet 2.0",
+    "CB350",
+    "CB300R",
+    "SP125",
+    "Dio",
+    "Grazia",
+    "Cliq",
+    "Other",
+  ],
+  Bajaj: [
+    "Pulsar 150",
+    "Pulsar 160NS",
+    "Pulsar 180",
+    "Pulsar 200NS",
+    "Pulsar 220F",
+    "Pulsar RS200",
+    "Pulsar N250",
+    "Dominar 250",
+    "Dominar 400",
+    "Platina 100",
+    "CT100",
+    "Avenger 160",
+    "Avenger 220",
+    "Chetak (Electric)",
+    "Other",
+  ],
+  TVS: [
+    "Jupiter",
+    "Jupiter 125",
+    "Ntorq 125",
+    "Apache RTR 160",
+    "Apache RTR 160 4V",
+    "Apache RTR 200 4V",
+    "Apache RR 310",
+    "Sport",
+    "Star City+",
+    "Radeon",
+    "Raider 125",
+    "Ronin",
+    "iQube Electric",
+    "Other",
+  ],
+  Yamaha: [
+    "FZ-S FI",
+    "FZ 25",
+    "MT-15",
+    "R15 V4",
+    "R3",
+    "Fascino 125",
+    "Ray ZR 125",
+    "Ray ZR Street Rally",
+    "Aerox 155",
+    "Saluto 125",
+    "Other",
+  ],
+  Suzuki: [
+    "Access 125",
+    "Burgman Street",
+    "Gixxer",
+    "Gixxer SF",
+    "Gixxer 250",
+    "Gixxer SF 250",
+    "V-Strom SX",
+    "Hayabusa",
+    "Other",
+  ],
+  "Royal Enfield": [
+    "Classic 350",
+    "Bullet 350",
+    "Meteor 350",
+    "Thunderbird 350X",
+    "Himalayan",
+    "Scram 411",
+    "Hunter 350",
+    "Super Meteor 650",
+    "Interceptor 650",
+    "Continental GT 650",
+    "Other",
+  ],
+  Kawasaki: [
+    "Ninja 300",
+    "Ninja 400",
+    "Ninja 650",
+    "Ninja ZX-6R",
+    "Ninja ZX-10R",
+    "Z650",
+    "Z900",
+    "Versys 650",
+    "W175",
+    "Other",
+  ],
+  KTM: [
+    "Duke 125",
+    "Duke 200",
+    "Duke 250",
+    "Duke 390",
+    "RC 200",
+    "RC 390",
+    "Adventure 250",
+    "Adventure 390",
+    "Other",
+  ],
+  Jawa: ["Jawa 42", "Jawa 350", "Perak", "42 FJ", "Other"],
+  Yezdi: ["Roadster", "Scrambler", "Adventure", "Other"],
+  Triumph: [
+    "Street Triple",
+    "Tiger Sport 660",
+    "Speed Triple",
+    "Bonneville T100",
+    "Bonneville T120",
+    "Scrambler 400 X",
+    "Speed 400",
+    "Other",
+  ],
+  "Harley-Davidson": [
+    "Street 750",
+    "Iron 883",
+    "Forty-Eight",
+    "Fat Boy",
+    "Road Glide",
+    "Street Glide",
+    "Pan America",
+    "X440",
+    "Other",
+  ],
+  BMW: [
+    "G 310 R",
+    "G 310 GS",
+    "F 850 GS",
+    "R 1250 GS",
+    "S 1000 RR",
+    "CE 04 (Electric)",
+    "Other",
+  ],
+  Benelli: [
+    "Imperiale 400",
+    "Leoncino 500",
+    "TRK 502",
+    "302R",
+    "502C",
+    "Other",
+  ],
+  Aprilia: [
+    "SR 125",
+    "SR 160",
+    "SR GT 125",
+    "RS 457",
+    "Tuono 660",
+    "RS 660",
+    "Other",
+  ],
+  Vespa: [
+    "SXL 125",
+    "VXL 125",
+    "SXL 150",
+    "VXL 150",
+    "ZX 125",
+    "Elegante 150",
+    "Other",
+  ],
+  Piaggio: ["Fly 125", "Medley", "MP3", "Other"],
+  Mahindra: ["Mojo 300", "Mojo UT300", "Other"],
+  Other: ["Other"],
+};
+
+const BRAND_LIST = Object.keys(BIKE_BRANDS_MODELS);
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function BookingForm({
   serviceType,
   repairDetails,
@@ -71,6 +264,8 @@ export default function BookingForm({
     useState<VehicleCategory>("scooter");
   const [capacity, setCapacity] = useState<Capacity>(defaultCapacity);
   const [timeSlot, setTimeSlot] = useState("");
+  const [bikeBrand, setBikeBrand] = useState("");
+  const [bikeModel, setBikeModel] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -79,6 +274,11 @@ export default function BookingForm({
   const setVehicleCategory = (cat: VehicleCategory) => {
     setInternalVehicleCategory(cat);
     onVehicleCategoryChange?.(cat);
+    // Reset brand/model when switching to electric
+    if (cat === "electric") {
+      setBikeBrand("");
+      setBikeModel("");
+    }
   };
 
   // Derive backend vehicleType from vehicleCategory
@@ -90,6 +290,16 @@ export default function BookingForm({
         : VehicleType.scooter;
 
   const isElectric = vehicleCategory === "electric";
+  const showBrandModel = !isElectric;
+  const availableModels = bikeBrand
+    ? (BIKE_BRANDS_MODELS[bikeBrand] ?? [])
+    : [];
+
+  // Reset model when brand changes
+  const handleBrandChange = (brand: string) => {
+    setBikeBrand(brand);
+    setBikeModel("");
+  };
 
   // Updated pricing: electric = ₹999 flat; under 200cc = ₹899; above 200cc = ₹1199
   const price = isElectric ? 999 : capacity === Capacity.upTo200cc ? 899 : 1199;
@@ -146,6 +356,8 @@ export default function BookingForm({
         repairDetails: repairDetails ? repairDetails : null,
         cleaningSubOption: subOption,
         timeSlot: timeSlot || null,
+        bikeBrand: bikeBrand || undefined,
+        bikeModel: bikeModel || undefined,
       });
 
       navigate({
@@ -155,6 +367,7 @@ export default function BookingForm({
           name: name.trim(),
           service: serviceType,
           slot: timeSlot,
+          phone: phone.trim(),
         },
       });
     } catch (err) {
@@ -324,6 +537,64 @@ export default function BookingForm({
           </label>
         </RadioGroup>
       </div>
+
+      {/* Bike Brand & Model — only for non-electric */}
+      {showBrandModel && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Label className="text-foreground font-semibold">
+              Bike Brand &amp; Model
+            </Label>
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              Optional
+            </span>
+          </div>
+
+          {/* Brand dropdown */}
+          <Select value={bikeBrand} onValueChange={handleBrandChange}>
+            <SelectTrigger
+              data-ocid="booking.brand_select"
+              className="bg-charcoal-light border-border text-foreground focus:border-brand-orange data-[placeholder]:text-muted-foreground"
+            >
+              <SelectValue placeholder="Select Brand (Optional)" />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border max-h-64">
+              {BRAND_LIST.map((brand) => (
+                <SelectItem
+                  key={brand}
+                  value={brand}
+                  className="text-foreground hover:bg-charcoal-light"
+                >
+                  {brand}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Model dropdown — shown only after brand is selected */}
+          {bikeBrand && bikeBrand !== "Other" && (
+            <Select value={bikeModel} onValueChange={setBikeModel}>
+              <SelectTrigger
+                data-ocid="booking.model_select"
+                className="bg-charcoal-light border-border text-foreground focus:border-brand-orange data-[placeholder]:text-muted-foreground"
+              >
+                <SelectValue placeholder="Select Model (Optional)" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border max-h-64">
+                {availableModels.map((model) => (
+                  <SelectItem
+                    key={model}
+                    value={model}
+                    className="text-foreground hover:bg-charcoal-light"
+                  >
+                    {model}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      )}
 
       {/* Name */}
       <div className="space-y-2">
